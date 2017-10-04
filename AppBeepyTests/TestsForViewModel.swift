@@ -1,5 +1,5 @@
 //
-//  AppBeepyTests.swift
+//  TestsForViewModel.swift
 //  AppBeepyTests
 //
 //  Created by andrzej semeniuk on 10/3/17.
@@ -7,9 +7,8 @@
 //
 
 import XCTest
-@testable import AppBeepy
 
-class AppBeepyTests: XCTestCase {
+class TestsForViewModel: XCTestCase {
     
     override func setUp() {
         super.setUp()
@@ -21,7 +20,27 @@ class AppBeepyTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
+    func testLocationManagerSetup() {
+    }
+    
+    func testBeaconSetup() {
+        
+    }
+    
+    func testBeaconTransimission() {
+        
+    }
+    
+    func testBeaconReception() {
+        
+    }
+    
+    func testLocationAwareness() {
+        
+    }
+    
+    func testLocationUpdates() {
+        
     }
     
     func testPerformanceExample() {

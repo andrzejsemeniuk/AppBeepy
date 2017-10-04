@@ -7,7 +7,25 @@
 		<key>AppBeepy.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>4</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>577E07761F8403B3003808B6</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>577E078A1F8403B3003808B6</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>577E07951F8403B3003808B6</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

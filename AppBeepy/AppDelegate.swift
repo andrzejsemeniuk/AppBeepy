@@ -44,3 +44,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+// https://developer.apple.com/documentation/corelocation/turning_an_ios_device_into_an_ibeacon
+
+// become an ibeacon
+// -get a 128-bit uuid
+// -create CLBeaconRegion
+// -advertise beacon
+
+// monitor changing properties:
+// -cl location 2d, altitude, floor, visit
+// -beacon
+

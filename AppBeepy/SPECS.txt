@@ -1,0 +1,38 @@
+
+-obtain proper authorization
+-detail abilities
+-create beacon
+-engage beacon
+-engage beacons?
+-compass heading
+-latitude/longitude location updates
+-floor
+-geocoder placename
+-region monitoring
+
+status:
+-authorization [not-determined, restricted, ...] // CLAuthorizationStatus
+-is-location services enabled t/f
+-is-deferred-location-updates-available t/f
+-is-significant-location-change-monitoring-available t/f
+-is-heading-available t/f
+-is-monitoring-available ? t/f
+-is-ranging-available t/f
+
+-start/stop updating location
+-start/stop monitoring significant changes
+-start/stop updating heading
+-start/stop region monitoring
+-start/stop ranging beacons
+-start/stop monitoring visits
+
+-request location?
+
+-may-pause-location-updates?
+-allows-background-location-updates?
+-shows-background-location-indicator?
+-distance-filter [number]
+-desired-accuracy [number]
+-activity-type [other,automotive-navigation,fitness,other-navigation] // CLActivityType
+
+

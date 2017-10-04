@@ -1,5 +1,5 @@
 //
-//  AppBeepyTests.swift
+//  TestsForModel.swift
 //  AppBeepyTests
 //
 //  Created by andrzej semeniuk on 10/3/17.
@@ -7,9 +7,8 @@
 //
 
 import XCTest
-@testable import AppBeepy
 
-class AppBeepyTests: XCTestCase {
+class TestsForModel: XCTestCase {
     
     override func setUp() {
         super.setUp()
@@ -22,6 +21,8 @@ class AppBeepyTests: XCTestCase {
     }
     
     func testExample() {
+        // This is an example of a functional test case.
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
     
     func testPerformanceExample() {
