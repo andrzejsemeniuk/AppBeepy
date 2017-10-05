@@ -10,9 +10,9 @@ import UIKit
 import ASToolkit
 import CoreLocation
 
-class ViewController: UIViewController {
+class ControllerOfDashboard : UIViewController {
 
-    var manager : CLLocationManager!
+    var locationManager : CLLocationManager!
     
     weak var model : ViewModel?
     
@@ -21,8 +21,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.manager = CLLocationManager()
-        self.manager.delegate = self
+        self.locationManager = CLLocationManager()
+        self.locationManager.delegate = self
         
         self.table = UITableView()
         
@@ -91,13 +91,13 @@ extension ViewController : UITableViewDataSource {
         
         switch indexPath.row {
         case 0:
-            result.textLabel?.attributedText = "LATITUDE: \(manager.location?.coordinate.latitude ?? 0)" | UIColor.white
+            result.textLabel?.attributedText = "LATITUDE: \(locationManager.location?.coordinate.latitude ?? 0)" | UIColor.white
         case 1:
-            result.textLabel?.attributedText = "LONGITUDE: \(manager.location?.coordinate.longitude ?? 0)" | UIColor.white
+            result.textLabel?.attributedText = "LONGITUDE: \(locationManager.location?.coordinate.longitude ?? 0)" | UIColor.white
         case 2:
-            result.textLabel?.attributedText = "ALTITUDE: \(manager.location?.altitude ?? 0)" | UIColor.white
+            result.textLabel?.attributedText = "ALTITUDE: \(locationManager.location?.altitude ?? 0)" | UIColor.white
         case 3:
-            result.textLabel?.attributedText = "HEADING/MAGNETIC: \(manager.heading?.magneticHeading ?? 0)" | UIColor.white
+            result.textLabel?.attributedText = "HEADING/MAGNETIC: \(locationManager.heading?.magneticHeading ?? 0)" | UIColor.white
         default:
             
             print("error")
