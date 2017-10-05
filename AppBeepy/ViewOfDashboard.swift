@@ -12,6 +12,10 @@ import CoreLocation
 
 class ViewOfDashboard : UIViewController {
 
+    private var settings : Settings {
+        return AppDelegate.settings
+    }
+
     var locationManager : CLLocationManager!
     
     weak var model : ViewModelOfDashboard?
@@ -35,6 +39,18 @@ class ViewOfDashboard : UIViewController {
         self.table.dataSource = self
         
         self.view = table
+        
+        
+        
+        self.title = "Beepy"
+        
+        let buttonForSettings = UIBarButtonItem.init(title: "Settings", style:.plain ,target: self, action: #selector(ViewOfDashboard.tapOnButtonForSettings(_:)))
+        //        let buttonForSettings = UIBarButtonItem.init(title: "\u{2699}", style:.plain ,target: self, action: #selector(ControllerOfDashboard.tapOnButtonForSettings(_:)))
+        //        let buttonForSettings = UIBarButtonItem.init(barButtonSystemItem: .compose , target: self, action: #selector(ControllerOfDashboard.tapOnButtonForSettings(_:)))
+        
+        self.navigationItem.rightBarButtonItem = buttonForSettings
+        
+        self.synchronizeWithSettings()
     }
 
     override func didReceiveMemoryWarning() {
@@ -42,6 +58,20 @@ class ViewOfDashboard : UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    override func viewWillAppear                (_ animated: Bool)
+    {
+        self.view.backgroundColor = settings.settingColorBackground.value
+
+        super.viewWillAppear(animated)
+    }
+
+    @objc func tapOnButtonForSettings(_ item:UIBarButtonItem) {
+        self.navigationController?.pushViewController(AppDelegate.viewOfSettings, animated: true)
+    }
+
+    internal func synchronizeWithSettings() {
+        self.view.backgroundColor = settings.settingColorBackground.value
+    }
 
 }
 

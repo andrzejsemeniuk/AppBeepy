@@ -129,7 +129,7 @@ class ViewOfSettingsOfLayout : GenericControllerOfSettings
     {
         let cell = super.tableView(tableView, cellForRowAt:indexPath)
         
-        //        cell.selectedBackgroundView = UIView.create(withBackgroundColor:AppDelegate.Settings.settingBackgroundColor.value)
+        //        cell.selectedBackgroundView = UIView.create(withBackgroundColor:AppDelegate.Settings.settingColorBackground.value)
         
         return cell
     }
@@ -141,7 +141,7 @@ class ViewOfSettingsOfLayout : GenericControllerOfSettings
     
     override func viewWillAppear                (_ animated: Bool)
     {
-        tableView.backgroundColor = settings.settingBackgroundColor.value
+        tableView.backgroundColor   = settings.settingColorBackgroundSettings.value
 
         colorForHeaderText          = .gray
         colorForFooterText          = colorForHeaderText
@@ -152,12 +152,10 @@ class ViewOfSettingsOfLayout : GenericControllerOfSettings
     }
     
     internal func synchronizeWithSettings() {
-        tableView.backgroundColor = settings.settingBackgroundColor.value
-
-        self.fontForLabelText   = AppDelegate.viewOfSettings.fontForFieldText
-        self.fontForFieldText   = AppDelegate.viewOfSettings.fontForFieldText
-        self.fontForFooterText  = AppDelegate.viewOfSettings.fontForFooterText
-        self.fontForHeaderText  = AppDelegate.viewOfSettings.fontForHeaderText
+        self.fontForLabelText       = AppDelegate.viewOfSettings.fontForFieldText
+        self.fontForFieldText       = AppDelegate.viewOfSettings.fontForFieldText
+        self.fontForFooterText      = AppDelegate.viewOfSettings.fontForFooterText
+        self.fontForHeaderText      = AppDelegate.viewOfSettings.fontForHeaderText
     }
     
 }

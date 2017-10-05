@@ -15,8 +15,10 @@ class Settings : GenericManagerOfSettings {
     
     var flagFirstTime                                   = GenericSetting<Bool>          (key:"flag-first-time", first:true)
     
-    var settingBackgroundColor                          = GenericSetting<UIColor>       (key:"setting-background", first:UIColor(hue:0.615))
-
+    
+    
+    var settingColorBackground                          = GenericSetting<UIColor>       (key:"setting-color-background", first:UIColor(hue:0.615))
+    var settingColorBackgroundSettings                  = GenericSetting<UIColor>       (key:"setting-color-background-settings", first:UIColor(white:0.96))
     var settingColorText                                = GenericSetting<UIColor>       (key:"setting-color-text", first:.white)
     var settingColorTitle                               = GenericSetting<UIColor>       (key:"setting-color-title", first:.white)
 
@@ -111,6 +113,7 @@ class Settings : GenericManagerOfSettings {
         settingLayout.value = list.joined(separator:",")
     }
 
+
     
     var settingBeaconTransmitterUUID                    = GenericSetting<String>        (key:"setting-beacon-transmitter-uuid", first:"")
     var settingBeaconTransmitterMajor                   = GenericSetting<UInt16>        (key:"setting-beacon-transmitter-major", first:0)
@@ -121,7 +124,7 @@ class Settings : GenericManagerOfSettings {
     
     
     var configurationCurrent                            = GenericSetting<String>        (key:"configuration-current", first: "Default")
-    var configurationListPredefined                     = GenericSetting<String>        (key:"configuration-list-predefined", first:"Default,Standard-ARGB,Standard-AHSB,Standard-ACMYK,All")
+    var configurationListPredefined                     = GenericSetting<String>        (key:"configuration-list-predefined", first:"Default,All")
     var configurationCustomStorage                      = GenericSetting<Dictionary<String,Dictionary<String,Any>>> (key:"configuration-list-custom-storage", first:[:])
     var configurationArrayOfNamesPredefined             : [String] {
         return configurationListPredefined.value.split(",").sorted()

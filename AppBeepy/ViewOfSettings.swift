@@ -243,6 +243,17 @@ class ViewOfSettings : GenericControllerOfSettings
                             
                             controller.style = .grouped
                             
+                            controller.view?.backgroundColor   = self.settings.settingColorBackgroundSettings.value
+                            
+//                            let size = UIFont.labelFontSize
+//
+//                            let font = UIFont.init(name:settings.settingFontName.value, size:size) ?? UIFont.systemFont(ofSize: size)
+//
+//                            controller.fontForLabelText   = font.withSize(size)
+//                            controller.fontForFieldText   = font.withSize(size)
+//                            controller.fontForFooterText  = font.withSize(size - 2)
+//                            controller.fontForHeaderText  = font.withSize(size - 2)
+
                             if 0 < self.settings.configurationArrayOfNamesCustom.count {
                                 controller.sections += [
                                     GenericControllerOfList.Section(
@@ -270,7 +281,7 @@ class ViewOfSettings : GenericControllerOfSettings
                                 guard let `self` = self else { return }
                                 if let selected = controller.item(at:indexPath) {
                                     self.settings.configuration(loadWithName:selected)
-                                    AppDelegate.rootViewController.view.backgroundColor = self.settings.settingBackgroundColor.value
+                                    AppDelegate.rootViewController.view.backgroundColor = self.settings.settingColorBackground.value
                                     controller.navigationController?.popViewController(animated: true)
                                 }
                             }
@@ -321,7 +332,7 @@ class ViewOfSettings : GenericControllerOfSettings
                     footer  : "",
                     cells   : [
                         
-                        createCellForUIColor1(settings.settingBackgroundColor, title: "Background Color") { [weak self] in
+                        createCellForUIColor1(settings.settingColorBackground, title: "Background Color") { [weak self] in
                             self?.settings.synchronize()
                         },
                         
@@ -342,7 +353,7 @@ class ViewOfSettings : GenericControllerOfSettings
     {
         let cell = super.tableView(tableView, cellForRowAt:indexPath)
         
-        //        cell.selectedBackgroundView = UIView.create(withBackgroundColor:AppDelegate.Settings.settingBackgroundColor.value)
+        //        cell.selectedBackgroundView = UIView.create(withBackgroundColor:AppDelegate.Settings.settingColorBackground.value)
         
         return cell
     }
@@ -354,7 +365,7 @@ class ViewOfSettings : GenericControllerOfSettings
     
     override func viewWillAppear                (_ animated: Bool)
     {
-        tableView.backgroundColor   = settings.settingBackgroundColor.value
+        tableView.backgroundColor   = settings.settingColorBackgroundSettings.value
         
         colorForHeaderText          = .gray
         colorForFooterText          = colorForHeaderText
@@ -364,9 +375,8 @@ class ViewOfSettings : GenericControllerOfSettings
         super.viewWillAppear(animated)
     }
     
-    internal func synchronizeWithSettings() {
-        self.view.backgroundColor = settings.settingBackgroundColor.value
-
+    internal func synchronizeWithSettings       ()
+    {
         let size = UIFont.labelFontSize
         
         let font = UIFont.init(name:settings.settingFontName.value, size:size) ?? UIFont.systemFont(ofSize: size)
