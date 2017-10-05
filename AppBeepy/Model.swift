@@ -51,11 +51,39 @@ class Model : NSObject {
 
     }
     
+    struct ValueRegion {
+        let identifier          : String
+        var state               : String = ""
+        var notifyOnEntry       : Bool = false
+        var notifyOnExit        : Bool = false
+    }
+    
     var valueLocationCoordinateLatitude                 = BindingValue<Value>(Value())
     var valueLocationCoordinateLongitude                = BindingValue<Value>(Value())
     var valueLocationAltitude                           = BindingValue<Value>(Value())
+    var valueLocationFloor                              = BindingValue<Value>(Value())
+    var valueLocationAccuracyHorizontal                 = BindingValue<Value>(Value())
+    var valueLocationAccuracyVertical                   = BindingValue<Value>(Value())
+    var valueLocationTimestamp                          = BindingValue<Value>(Value())
+    var valueLocationSpeed                              = BindingValue<Value>(Value())
+    var valueLocationCourse                             = BindingValue<Value>(Value())
+    var valueLocationPlacemark                          = BindingValue<Value>(Value())
 
     var valueHeadingMagnetic                            = BindingValue<Value>(Value())
+    var valueHeadingTrue                                = BindingValue<Value>(Value())
+    var valueHeadingAccuracy                            = BindingValue<Value>(Value())
+    var valueHeadingTimestamp                           = BindingValue<Value>(Value())
+    var valueHeadingX                                   = BindingValue<Value>(Value())
+    var valueHeadingY                                   = BindingValue<Value>(Value())
+    var valueHeadingZ                                   = BindingValue<Value>(Value())
+
+    var valueBeaconUUID                                 = BindingValue<Value>(Value())
+    var valueBeaconMajor                                = BindingValue<Value>(Value())
+    var valueBeaconMinor                                = BindingValue<Value>(Value())
+    var valueBeaconIdentifier                           = BindingValue<Value>(Value())
+    
+    var valueRegionsMonitored                           = BindingValue<[ValueRegion]>([])
+    var valueRegionsRanged                              = BindingValue<[ValueRegion]>([])
 
     var locationManager : CLLocationManager!
     

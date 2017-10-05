@@ -117,24 +117,6 @@ extension ViewOfDashboard : UITableViewDataSource {
         result.layoutMargins = .zero
         
         
-//        switch (indexPath.section,indexPath.row) {
-//        case (0,0):
-//            result.textLabel?.attributedText = "LATITUDE" | UIColor.white
-//            value.attributedText = "\(locationManager.location?.coordinate.latitude ?? 0)" | UIColor.white
-//        case (0,1):
-//            result.textLabel?.attributedText = "LONGITUDE" | UIColor.white
-//            value.attributedText = "\(locationManager.location?.coordinate.longitude ?? 0)" | UIColor.white
-//        case (0,2):
-//            result.textLabel?.attributedText = "ALTITUDE" | UIColor.white
-//            value.attributedText = "\(locationManager.location?.altitude ?? 0)" | UIColor.white
-//        case (1,0):
-//            result.textLabel?.attributedText = "MAGNETIC" | UIColor.white
-//            value.attributedText = "\(locationManager.heading?.magneticHeading ?? 0)" | UIColor.white
-//        default:
-//
-//            print("error")
-//        }
-
         if let row = model.data.value?.sections[indexPath.section].rows[indexPath.row] {
         
             let value = UILabel()
