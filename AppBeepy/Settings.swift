@@ -29,6 +29,7 @@ class Settings : GenericManagerOfSettings {
     
     var settingDisplayHelp                              = GenericSetting<Bool>          (key:"setting-display-help", first:true)
     
+    
 
     var settingLayoutShowLocation                       = GenericSetting<Bool>          (key:"setting-layout-show-location", first:true)
     // location/coordinate/latitude
@@ -88,7 +89,7 @@ class Settings : GenericManagerOfSettings {
     var settingLayoutShowRegionState                    = GenericSetting<Bool>          (key:"setting-layout-show-region-state", first:true)
     // region/notify-on-entry/exit
     var settingLayoutShowRegionNotification             = GenericSetting<Bool>          (key:"setting-layout-show-region-notification", first:true)
-
+    
 
     var settingLayout                                   = GenericSetting<String>        (key:"setting-layout", first:"")
     var settingLayoutElements                           : [String] {

@@ -22,7 +22,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     internal static var viewOfDashboard                 : ViewOfDashboard = {
-        return ViewOfDashboard()
+        let result = ViewOfDashboard()
+        let model = Model()
+        let viewmodel = ViewModelOfDashboard()
+        viewmodel.model = model
+        result.model = viewmodel
+        return result
     }()
     
     internal static var viewOfSettings                  : ViewOfSettings = {
