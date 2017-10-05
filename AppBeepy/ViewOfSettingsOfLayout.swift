@@ -73,139 +73,50 @@ class ViewOfSettingsOfLayout : GenericControllerOfSettings
         let exclusiveDisplays : [Weak<GenericSetting<Bool>>] = { [weak self] in
             guard let `self` = self else { return [] }
             return [
-                Weak(self.settings.settingComponentDisplayBackgroundOn),
-                Weak(self.settings.settingComponentDisplayDotOn),
-                Weak(self.settings.settingComponentDisplayFillOn),
-                Weak(self.settings.settingComponentDisplaySplitVerticalOn),
-                Weak(self.settings.settingComponentDisplaySplitHorizontalOn),
-                Weak(self.settings.settingComponentDisplaySplitDiagonalOn),
             ]
             }()
         
+        let applyToSettings: (String,Bool)->() = { [weak self] prefix, value in
+            for setting in self?.settings.collect(withPrefix:prefix) ?? [] {
+                if let setting = setting.object as? GenericSetting<Bool> {
+                    setting.value = true
+                }
+            }
+        }
+        
         return [
-            //            Section(header  : "LAYOUT",
-            //                    footer  : "",
-            //                    cells   : [
             
-            //                        createCellForTapOnRevolvingChoices(settings.settingLayoutMargin,
-            //                                                           title     : "Size",
-            //                                                           choices   : ["XS","S","M","L","XL"]),
-            
-            //                        ]),
-            
-            Section(header  : "Switching determines display order"),
-            
-            Section(header  : "DISPLAYS",
-                    //                    footer  : "Switching order determines display order",
+            Section(header  : "LOCATION",
                 cells   : [
                     
-                    createCellForUISwitch(settings.settingComponentDisplayBackgroundOn, title: "Background", exclusive:exclusiveDisplays) { [weak self] value in
-                        self?.tableView?.reloadSections(IndexSet.init(integer:1), with: .automatic)
-                    },
+//                    createCellForUISwitch(settings.settingLayoutShowLocation, title: "All") { [weak self] value in
+//                        applyToSettings("settingLayoutShowLocation",value)
+//                        self?.tableView?.reloadSections(IndexSet.init(integer:1), with: .automatic)
+//                    },
                     
-                    createCellForUISwitch(settings.settingComponentDisplayDotOn, title: "Dot", exclusive:exclusiveDisplays) { [weak self] value in
-                        self?.tableView?.reloadSections(IndexSet.init(integer:1), with: .automatic)
-                    },
+                    createCellForUISwitch(settings.settingLayoutShowLocationCoordinateLatitude, title: "Latitude"),
                     
-                    createCellForUISwitch(settings.settingComponentDisplayFillOn, title: "Fill", exclusive:exclusiveDisplays) { [weak self] value in
-                        self?.tableView?.reloadSections(IndexSet.init(integer:1), with: .automatic)
-                    },
-                    
-                    createCellForUISwitch(settings.settingComponentDisplaySplitDiagonalOn, title: "Diagonal Split", exclusive:exclusiveDisplays) { [weak self] value in
-                        self?.tableView?.reloadSections(IndexSet.init(integer:1), with: .automatic)
-                    },
-                    
-                    createCellForUISwitch(settings.settingComponentDisplaySplitVerticalOn, title: "Vertical Split", exclusive:exclusiveDisplays) { [weak self] value in
-                        self?.tableView?.reloadSections(IndexSet.init(integer:1), with: .automatic)
-                    },
-                    
-                    createCellForUISwitch(settings.settingComponentDisplaySplitHorizontalOn, title: "Horizontal Split", exclusive:exclusiveDisplays) { [weak self] value in
-                        self?.tableView?.reloadSections(IndexSet.init(integer:1), with: .automatic)
-                    },
+//                    createCellForUISwitch(settings.settingComponentDisplayDotOn, title: "Dot", exclusive:exclusiveDisplays) { [weak self] value in
+//                        self?.tableView?.reloadSections(IndexSet.init(integer:1), with: .automatic)
+//                    },
                     
                     ]),
             
-            Section(header  : "VALUE",
-                    //                    footer  : "Switching order determines display order",
+            Section(header  : "HEADING",
                 cells   : [
                     
-                    createCellForUISwitch(settings.settingComponentDisplayValueAlphaOn, title: "Alpha"),
-                    createCellForUISwitch(settings.settingComponentDisplayValueRGBAHexOn, title: "RGBA as Hexadecimal"),
-                    createCellForUISwitch(settings.settingComponentDisplayValueRGBOn, title: "RGB"),
-                    createCellForUISwitch(settings.settingComponentDisplayValueHSBOn, title: "HSB"),
-                    createCellForUISwitch(settings.settingComponentDisplayValueCMYKOn, title: "CMYK"),
+                    createCellForUISwitch(settings.settingLayoutShowHeadingMagnetic, title: "Magnetic")
                     
                     ]),
             
-            Section(header  : "SLIDERS",
-                    //                    footer  : "Switching order determines display order",
+            Section(header  : "BEACON",
                 cells   : [
-                    createCellForUISwitch(settings.settingComponentSliderAlphaOn,               title: "Alpha"),
-                    createCellForUISwitch(settings.settingComponentSliderRedOn,                 title: "Red"),
-                    createCellForUISwitch(settings.settingComponentSliderGreenOn,               title: "Green"),
-                    createCellForUISwitch(settings.settingComponentSliderBlueOn,                title: "Blue"),
-                    createCellForUISwitch(settings.settingComponentSliderHueOn,                 title: "Hue"),
-                    createCellForUISwitch(settings.settingComponentSliderSaturationOn,          title: "Saturation"),
-                    createCellForUISwitch(settings.settingComponentSliderBrightnessOn,          title: "Brightness"),
-                    createCellForUISwitch(settings.settingComponentSliderCyanOn,                title: "Cyan"),
-                    createCellForUISwitch(settings.settingComponentSliderMagentaOn,             title: "Magenta"),
-                    createCellForUISwitch(settings.settingComponentSliderYellowOn,              title: "Yellow"),
-                    createCellForUISwitch(settings.settingComponentSliderKeyOn,                 title: "Key/Black"),
+                    createCellForUISwitch(settings.settingLayoutShowBeaconUUID, title: "UUID")
                     ]),
             
-            Section(header  : "COLOR STORAGE",
-                    //                    footer  : "Switching order determines display order",
+            Section(header  : "REGIONS",
                 cells   : [
-                    createCellForUISwitch(settings.settingComponentStorageDotsOn,               title: "Dots"),
-                    
-                    //                        createCellForTapOnRevolvingChoices(settings.settingComponentStorageDotsSize,
-                    //                                                           title     : "  size",
-                    //                                                           choices   : ["S","M","L"]),
-                    
-                    createCellForTapOnRevolvingChoices(value     : { [weak self] in
-                        return "\(self?.settings.settingComponentStorageDotsRows.value ?? 0)"
-                        },
-                                                       title     : "  Rows",
-                                                       choices   : ["1","2","3","4","5","6"]) { [weak self] value in
-                                                        if let number = Int(value) {
-                                                            self?.settings.settingComponentStorageDotsRows.value = number
-                                                        }
-                    },
-                    
-                    createCellForUISwitch(settings.settingComponentStorageHistoryOn,                title: "History"),
-                    
-                    createCellForTapOnRevolvingChoices(value     : { [weak self] in
-                        return "\(self?.settings.settingComponentStorageDragRows.value ?? 0)"
-                        },
-                                                       title     : "  Rows",
-                                                       choices   : ["1","2","3","4","5","6"]) { [weak self] value in
-                                                        if let number = Int(value) {
-                                                            self?.settings.settingComponentStorageHistoryRows.value = number
-                                                        }
-                    },
-                    
-                    createCellForUISwitch(settings.settingComponentStorageDragOn,                   title: "Drag"),
-                    
-                    //                         TODO
-                    //                        createCellForTapOnInput(title    : "Save Colors As ...",
-                    //                                                message  : "Specify name for current palette of colors",
-                    //                                                setup    : { [weak self] cell,indexpath in
-                    //                                                    cell.selectionStyle = .default
-                    //                                                    cell.accessoryType  = .none
-                    //                                                    if let detail = cell.detailTextLabel {
-                    //                                                        detail.text = self?.settings.configurationCurrent.value
-                    //                                                    }
-                    //                            }, value:{ [weak self] in
-                    //                                return (self?.settings.configurationCurrent.value ?? "") + "+"
-                    //                        }) { [weak self] text in
-                    //
-                    //                        },
-                ]),
-            
-            Section(header  : "MISCELLANEOUS",
-                    //                    footer  : "Switching order determines display order",
-                cells   : [
-                    createCellForUISwitch(settings.settingComponentOperationsOn,               title: "Operations")
+                    createCellForUISwitch(settings.settingLayoutShowRegionsMonitored, title: "Monitored")
                 ]),
             
         ]
@@ -230,13 +141,8 @@ class ViewOfSettingsOfLayout : GenericControllerOfSettings
     
     override func viewWillAppear                (_ animated: Bool)
     {
-        if settings.settingComponentDisplayBackgroundOn.value {
-            tableView.backgroundColor = AppDelegate.controllerOfDashboard.view?.backgroundColor
-        }
-        else {
-            tableView.backgroundColor = settings.settingBackgroundColor.value
-        }
-        
+        tableView.backgroundColor = settings.settingBackgroundColor.value
+
         colorForHeaderText          = .gray
         colorForFooterText          = colorForHeaderText
         
@@ -246,17 +152,12 @@ class ViewOfSettingsOfLayout : GenericControllerOfSettings
     }
     
     internal func synchronizeWithSettings() {
-        if settings.settingComponentDisplayBackgroundOn.value {
-            self.view.backgroundColor = AppDelegate.controllerOfDashboard.view?.backgroundColor
-        }
-        else {
-            self.view.backgroundColor = settings.settingBackgroundColor.value
-        }
-        
-        self.fontForLabelText   = AppDelegate.controllerOfSettings.fontForFieldText
-        self.fontForFieldText   = AppDelegate.controllerOfSettings.fontForFieldText
-        self.fontForFooterText  = AppDelegate.controllerOfSettings.fontForFooterText
-        self.fontForHeaderText  = AppDelegate.controllerOfSettings.fontForHeaderText
+        tableView.backgroundColor = settings.settingBackgroundColor.value
+
+        self.fontForLabelText   = AppDelegate.viewOfSettings.fontForFieldText
+        self.fontForFieldText   = AppDelegate.viewOfSettings.fontForFieldText
+        self.fontForFooterText  = AppDelegate.viewOfSettings.fontForFooterText
+        self.fontForHeaderText  = AppDelegate.viewOfSettings.fontForHeaderText
     }
     
 }

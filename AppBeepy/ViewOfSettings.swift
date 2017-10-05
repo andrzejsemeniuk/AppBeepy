@@ -80,7 +80,7 @@ class ViewOfSettings : GenericControllerOfSettings
     {
         let setupForPicker : ((GenericPickerOfColor)->())? = { [weak self, weak setting] picker in
             
-            self?.settings.configure(picker: picker)
+//            self?.settings.configure(picker: picker)
             
             let showLabels = picker.configuration.title.show
             
@@ -312,52 +312,8 @@ class ViewOfSettings : GenericControllerOfSettings
                         createCellForTap(title: "Configure", setup:{ cell,index in
                             cell.accessoryType  = .disclosureIndicator
                         }) { [weak self] in
-                            self?.navigationController?.pushViewController(AppDelegate.controllerOfSettingsOfLayout, animated: true)
+                            self?.navigationController?.pushViewController(AppDelegate.viewOfSettingsOfLayout, animated: true)
                         },
-                        
-                        createCellForUISwitch(settings.settingLayoutKeepDisplayOnTop, title: "Pin Display component to top"),
-                        
-                        createCellForTapOnRevolvingChoices(settings.settingComponentDisplaySize, title: "Display Size", choices: ["S","M","L"]),
-                        
-                        createCellForTapOnRevolvingChoices(settings.settingLayoutMargin, title: "Margin", choices: ["-","S","M","L","XL"]),
-                        
-                        createCellForTapOnRevolvingChoices(settings.settingLayoutStripesAlpha, title: "Stripes Alpha", choices: ["-","0.01","0.02","0.04","0.08"]),
-                        
-                        createCellForUISwitch(settings.settingComponentDisplayValueColorize, title: "Colorize values"),
-                        
-                        ]),
-            
-            Section(header  : "LABELS",
-                    footer  : "",
-                    cells   : [
-                        
-                        createCellForUISwitch(settings.settingLabelsOn, title: "Show"),
-                        
-                        createCellForUIColor1(settings.settingLabelsColorBackground, title: "Background Color"),
-                        
-                        createCellForUIColor1(settings.settingLabelsColorText, title: "Text Color"),
-                        
-                        createCellForUIFontName(settings.settingLabelsFontName, title: "Font"),
-                        
-                        createCellForUISwitch(settings.settingLabelsFontNameSameAsApp, title: "  Same as App"),
-                        
-                        createCellForTapOnRevolvingChoices(settings.settingLabelsSize,
-                                                           title     : "Size",
-                                                           choices   : ["XS","S","M","L","XL"]),
-                        
-                        ]),
-            
-            Section(header  : "OPERATIONS",
-                    footer  : "",
-                    cells   : [
-                        
-                        createCellForUIColor1(settings.settingOperationsButtonColorBackgroundNormal, title: "Button background color"),
-                        
-                        createCellForUIColor1(settings.settingOperationsButtonColorForegroundNormal, title: "Button foreground color"),
-                        
-                        createCellForUIColor1(settings.settingOperationsButtonColorBackgroundSelected, title: "Button background color when selected"),
-                        
-                        createCellForUIColor1(settings.settingOperationsButtonColorForegroundSelected, title: "Button foreground color when selected"),
                         
                         ]),
             
@@ -366,10 +322,6 @@ class ViewOfSettings : GenericControllerOfSettings
                     cells   : [
                         
                         createCellForUIColor1(settings.settingBackgroundColor, title: "Background Color") { [weak self] in
-                            self?.settings.synchronize()
-                        },
-                        
-                        createCellForUIFontName(settings.settingFontName, name: "Font", title: "Font") { [weak self] in
                             self?.settings.synchronize()
                         },
                         
@@ -402,13 +354,6 @@ class ViewOfSettings : GenericControllerOfSettings
     
     override func viewWillAppear                (_ animated: Bool)
     {
-        if settings.settingComponentDisplayBackgroundOn.value {
-            tableView.backgroundColor   = AppDelegate.controllerOfDashboard.view?.backgroundColor
-        }
-        else {
-            tableView.backgroundColor   = settings.settingBackgroundColor.value
-        }
-        
         tableView.backgroundColor   = settings.settingBackgroundColor.value
         
         colorForHeaderText          = .gray
@@ -420,13 +365,8 @@ class ViewOfSettings : GenericControllerOfSettings
     }
     
     internal func synchronizeWithSettings() {
-        if settings.settingComponentDisplayBackgroundOn.value {
-            self.view.backgroundColor = AppDelegate.controllerOfDashboard.view?.backgroundColor
-        }
-        else {
-            self.view.backgroundColor = settings.settingBackgroundColor.value
-        }
-        
+        self.view.backgroundColor = settings.settingBackgroundColor.value
+
         let size = UIFont.labelFontSize
         
         let font = UIFont.init(name:settings.settingFontName.value, size:size) ?? UIFont.systemFont(ofSize: size)

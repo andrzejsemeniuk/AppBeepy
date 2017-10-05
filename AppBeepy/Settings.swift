@@ -16,7 +16,13 @@ class Settings : GenericManagerOfSettings {
     var flagFirstTime                                   = GenericSetting<Bool>          (key:"flag-first-time", first:true)
     
     var settingBackgroundColor                          = GenericSetting<UIColor>       (key:"setting-background", first:UIColor(hue:0.615))
-    
+
+    var settingColorText                                = GenericSetting<UIColor>       (key:"setting-color-text", first:.white)
+    var settingColorTitle                               = GenericSetting<UIColor>       (key:"setting-color-title", first:.white)
+
+    var settingFontName                                 = GenericSetting<String>        (key:"setting-font-name", first:"GillSans-Light")
+    var settingFontTitleName                            = GenericSetting<String>        (key:"setting-font-name-title", first:"GillSans")
+
     var settingAudioOn                                  = GenericSetting<Bool>          (key:"setting-audio-on", first:true)
     
     var settingDisplayHelp                              = GenericSetting<Bool>          (key:"setting-display-help", first:true)
@@ -81,12 +87,51 @@ class Settings : GenericManagerOfSettings {
     // region/notify-on-entry/exit
     var settingLayoutShowRegionNotification             = GenericSetting<Bool>          (key:"setting-layout-show-region-notification", first:true)
 
+
+    var settingLayout                                   = GenericSetting<String>        (key:"setting-layout", first:"")
+    var settingLayoutElements                           : [String] {
+        return settingLayout.value.split(",")
+    }
+    func settingLayoutRebuild                           () {
+        var elements:[String] = []
+        for element in collect(withPrefix:"settingLayoutShow") {
+            if let setting = element.object as? GenericSetting<Bool>, setting.value {
+                elements.append(setting.key)
+            }
+        }
+        settingLayout.value = elements.joined(separator: ",")
+    }
+    func settingLayoutElements                          (append id:String) {
+        var list = self.settingLayoutElements.filter { $0 != id }
+        list.append(id)
+        settingLayout.value = list.joined(separator:",")
+    }
+    func settingLayoutElements                          (remove id:String) {
+        let list = self.settingLayoutElements.filter { $0 != id }
+        settingLayout.value = list.joined(separator:",")
+    }
+
     
     var settingBeaconTransmitterUUID                    = GenericSetting<String>        (key:"setting-beacon-transmitter-uuid", first:"")
     var settingBeaconTransmitterMajor                   = GenericSetting<UInt16>        (key:"setting-beacon-transmitter-major", first:0)
     var settingBeaconTransmitterMinor                   = GenericSetting<UInt16>        (key:"setting-beacon-transmitter-minor", first:0)
     var settingBeaconTransmitterIdentifier              = GenericSetting<String>        (key:"setting-beacon-transmitter-identifier", first:"?")
 
+    
+    
+    
+    var configurationCurrent                            = GenericSetting<String>        (key:"configuration-current", first: "Default")
+    var configurationListPredefined                     = GenericSetting<String>        (key:"configuration-list-predefined", first:"Default,Standard-ARGB,Standard-AHSB,Standard-ACMYK,All")
+    var configurationCustomStorage                      = GenericSetting<Dictionary<String,Dictionary<String,Any>>> (key:"configuration-list-custom-storage", first:[:])
+    var configurationArrayOfNamesPredefined             : [String] {
+        return configurationListPredefined.value.split(",").sorted()
+    }
+    var configurationArrayOfNamesCustom                 : [String] {
+        return configurationCustomStorage.value.keys.sorted()
+    }
+
+    
+    
     
     /// Use this method to store settings persistently.
     func synchronize() {
@@ -95,8 +140,121 @@ class Settings : GenericManagerOfSettings {
         AppDelegate.synchronizeWithSettings()
     }
     
+}
+
+// MARK: - CONFIGURATIONS
+
+extension Settings {
+    
+    /// Engage current configuration
     func configurationLoadCurrent() {
+        self.configuration(loadWithName: configurationCurrent.value)
+    }
+    
+    /// Engage the specified configuration
+    ///
+    /// - Parameter name: the name of the configuration to engage
+    func configuration(loadWithName name:String) {
         
+        let clear = {
+            self.reset(withPrefix:"setting")
+            
+        }
+        
+        let name = name.trimmed()
+        
+        switch name {
+            
+        case "Default":
+            
+            clear()
+            
+            configurationCurrent                            .value = name
+            
+            synchronize()
+            
+        case "All":
+            
+            clear()
+            
+            configurationCurrent                            .value = name
+            
+            for setting in self.collect(withPrefix:"settingLayoutShow") {
+                if let setting = setting.object as? GenericSetting<Bool> {
+                    setting.value = true
+                }
+            }
+            
+            synchronize()
+            
+        default:
+            
+            if let dictionary = configurationCustomStorage.value[name] {
+                
+                print(dictionary)
+                
+                clear()
+                
+                configurationCurrent.value = name
+                
+                decode(dictionary: dictionary, withPrefix:"setting") // only interested in 'setting' variables
+                
+                synchronize()
+            }
+            
+            break
+        }
+    }
+    
+    /// Save current configuration with a custom name as a new configuration
+    ///
+    /// - Parameter name: name of new configuration
+    /// - Returns: true if saved
+    func configuration(saveWithCustomName name:String) -> Bool {
+        
+        if !configurationArrayOfNamesPredefined.contains(name) {
+            
+            var dictionary = [String:Any]()
+            
+            settingLayoutRebuild()
+            
+            encode(dictionary: &dictionary, withPrefix:"setting") // only interested in 'setting' variables
+            
+            print(dictionary)
+            
+            var current = configurationCustomStorage.value
+            
+            current[name] = dictionary
+            
+            configurationCustomStorage.value = current
+            
+            synchronize()
+            
+            return true
+        }
+        
+        return false
+    }
+    
+    /// Remove custom configuration with specified name
+    ///
+    /// - Parameter name: name of custom configuration to remove
+    /// - Returns: true if success
+    func configuration(removeCustomWithName name:String) -> Bool {
+        
+        if configurationArrayOfNamesCustom.contains(name) {
+            
+            var current = configurationCustomStorage.value
+            
+            current.removeValue(forKey: name)
+            
+            configurationCustomStorage.value = current
+            
+            synchronize()
+            
+            return true
+        }
+        return false
     }
     
 }
