@@ -10,11 +10,11 @@ import UIKit
 import ASToolkit
 import CoreLocation
 
-class ControllerOfDashboard : UIViewController {
+class ViewOfDashboard : UIViewController {
 
     var locationManager : CLLocationManager!
     
-    weak var model : ViewModel?
+    weak var model : ViewModelOfDashboard?
     
     var table : UITableView!
     
@@ -45,13 +45,13 @@ class ControllerOfDashboard : UIViewController {
 
 }
 
-extension ViewController : UITableViewDelegate {
+extension ViewOfDashboard : UITableViewDelegate {
     
     
     
 }
 
-extension ViewController : UITableViewDataSource {
+extension ViewOfDashboard : UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 4
@@ -63,31 +63,6 @@ extension ViewController : UITableViewDataSource {
         result.backgroundColor = .clear
         result.separatorInset = .zero
         result.layoutMargins = .zero
-        // location/coordinate/latitude
-        // location/coordinate/longitude
-        // location/altitude
-        // location/floor
-        // location/accuracy/horizontal
-        // location/accuracy/vertical
-        // location/timestamp
-        // location/speed
-        // location/course
-        // location/placemark
-        // heading/magnetic
-        // heading/true
-        // heading/accuracy
-        // heading/timestamp
-        // heading/x
-        // heading/y
-        // heading/z
-        // beacon/uuid
-        // beacon/major
-        // beacon/minor
-        // beacon/id
-        // regions: monitored/ranged-beacons
-        // region/identifier
-        // region/state
-        // region/notify-on-entry/exit
         
         switch indexPath.row {
         case 0:
@@ -107,6 +82,6 @@ extension ViewController : UITableViewDataSource {
     
 }
 
-extension ViewController : CLLocationManagerDelegate {
+extension ViewOfDashboard : CLLocationManagerDelegate {
     
 }

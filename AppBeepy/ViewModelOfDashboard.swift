@@ -9,7 +9,7 @@
 import Foundation
 import ASToolkit
 
-class ViewModel {
+class ViewModelOfDashboard {
     
     
     
