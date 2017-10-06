@@ -55,7 +55,6 @@ class ViewOfDashboard : UIViewController {
     }
 
     override func viewWillLayoutSubviews() {
-//        self.table?.reloadData()
         self.model?.build()
         super.viewWillLayoutSubviews()
     }
