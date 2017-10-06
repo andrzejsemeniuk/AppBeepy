@@ -10,237 +10,96 @@ import Foundation
 import CoreLocation
 import ASToolkit
 
-class Model : NSObject {
+struct ModelValue {
     
-    struct Value {
-        var value               : String? {
-            get {
-                return self.values.current
-            }
-            set {
-                self.values.previous    = self.values.current
-                self.values.current     = newValue
-                self.changed            = self.values.previous != self.values.current
-            }
+    var value               : String? {
+        get {
+            return self.values.current
         }
-        var old                 : String? {
-            get {
-                return self.values.previous
-            }
-        }
-        var changed             : Bool = false
-        
-        init(value:String = "?") {
-            self.value = value
-        }
-        
-        private var values      : (current:String?,previous:String?) = (nil,nil)
-        
-        mutating func set                (fromString v:String)  -> Bool   {
-            self.value = v
-            return self.changed
-        }
-        mutating func set                (fromDouble v:Double)  -> Bool   {
-            self.value = "\(v)"
-            return self.changed
-        }
-        mutating func set                (fromFloat v:Double)   -> Bool   {
-            self.value = "\(v)"
-            return self.changed
-        }
-
-    }
-    
-    struct ValueRegion {
-        let identifier          : String
-        var state               : String = ""
-        var notifyOnEntry       : Bool = false
-        var notifyOnExit        : Bool = false
-    }
-    
-    struct ValueBeacon {
-        let regionIdentifier    : String
-        let proximityUUID       : String
-        let proximity           : CLProximity
-        let accuracy            : Double
-        let major               : UInt16
-        let minor               : UInt16
-        let rssi                : Int
-    }
-    
-    var valueLocationCoordinateLatitude                 = BindingValue<Value>(Value())
-    var valueLocationCoordinateLongitude                = BindingValue<Value>(Value())
-    var valueLocationAltitude                           = BindingValue<Value>(Value())
-    var valueLocationFloor                              = BindingValue<Value>(Value())
-    var valueLocationAccuracyHorizontal                 = BindingValue<Value>(Value())
-    var valueLocationAccuracyVertical                   = BindingValue<Value>(Value())
-    var valueLocationTimestamp                          = BindingValue<Value>(Value())
-    var valueLocationSpeed                              = BindingValue<Value>(Value())
-    var valueLocationCourse                             = BindingValue<Value>(Value())
-    var valueLocationPlacemark                          = BindingValue<Value>(Value())
-
-    var valueHeadingMagnetic                            = BindingValue<Value>(Value())
-    var valueHeadingTrue                                = BindingValue<Value>(Value())
-    var valueHeadingAccuracy                            = BindingValue<Value>(Value())
-    var valueHeadingTimestamp                           = BindingValue<Value>(Value())
-    var valueHeadingX                                   = BindingValue<Value>(Value())
-    var valueHeadingY                                   = BindingValue<Value>(Value())
-    var valueHeadingZ                                   = BindingValue<Value>(Value())
-
-    var valueBeaconUUID                                 = BindingValue<Value>(Value())
-    var valueBeaconMajor                                = BindingValue<Value>(Value())
-    var valueBeaconMinor                                = BindingValue<Value>(Value())
-    var valueBeaconIdentifier                           = BindingValue<Value>(Value())
-    
-    var valueBeaconsRanged                              = BindingValue<[ValueBeacon]>([])
-    
-    var valueRegionsMonitored                           = BindingValue<[ValueRegion]>([])
-    var valueRegionsRanged                              = BindingValue<[ValueRegion]>([])
-
-    var update                                          = BindingValue<Bool>(false)
-    
-    var locationManager : CLLocationManager!
-    
-    override init() {
-        super.init()
-        
-        self.locationManager = CLLocationManager()
-        self.locationManager.delegate = self
-        
-        locationManager.requestWhenInUseAuthorization()
-    }
-    
-    fileprivate func update(_ value:BindingValue<Value>!, withString:String) {
-        if value.value?.set(fromString: withString) ?? false {
-            value.fire()
+        set {
+            self.values.previous    = self.values.current
+            self.values.current     = newValue
+            self.changed            = self.values.previous != self.values.current
         }
     }
-
-    fileprivate func update(_ value:BindingValue<Value>!, withDouble:Double) {
-        if value.value?.set(fromDouble: withDouble) ?? false {
-            value.fire()
+    
+    var old                 : String? {
+        get {
+            return self.values.previous
         }
     }
+    
+    var changed             : Bool = false
+    
+    init(value:String = "?") {
+        self.value = value
+    }
+    
+    private var values      : (current:String?,previous:String?) = (nil,nil)
+    
+    mutating func set                (fromString v:String)  -> Bool   {
+        self.value = v
+        return self.changed
+    }
+    mutating func set                (fromDouble v:Double)  -> Bool   {
+        self.value = "\(v)"
+        return self.changed
+    }
+    mutating func set                (fromFloat v:Double)   -> Bool   {
+        self.value = "\(v)"
+        return self.changed
+    }
+    
 }
 
-extension Model : CLLocationManagerDelegate {
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("error: \(error)")
-        self.update.fire()
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFinishDeferredUpdatesWithError error: Error?) {
-        print("deferred-updates-with-error: \(error)")
-        self.update.fire()
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didVisit visit: CLVisit) {
-        // TODO
-        self.update.fire()
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-        valueRegionsMonitored.value = manager.monitoredRegions.map {
-            return ValueRegion(identifier: $0.identifier, state: "?", notifyOnEntry: false, notifyOnExit: false)
-        }
-        self.update.fire()
+struct ModelValueRegion {
+    let identifier          : String
+    var state               : String = ""
+    var notifyOnEntry       : Bool = false
+    var notifyOnExit        : Bool = false
+}
 
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        valueRegionsMonitored.value = manager.monitoredRegions.map {
-            return ValueRegion(identifier: $0.identifier, state: "?", notifyOnEntry: false, notifyOnExit: false)
-        }
-        self.update.fire()
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
-        valueRegionsMonitored.value = manager.monitoredRegions.map {
-            return ValueRegion(identifier: $0.identifier, state: "?", notifyOnEntry: false, notifyOnExit: false)
-        }
-        self.update.fire()
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        if let heading = manager.heading {
-            self.update(valueHeadingMagnetic,               withDouble: heading.magneticHeading)
-            // TODO
-        }
-        self.update.fire()
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.last {
-            self.update(valueLocationCoordinateLatitude,    withDouble: location.coordinate.latitude)
-            self.update(valueLocationCoordinateLongitude,   withDouble: location.coordinate.longitude)
-            self.update(valueLocationAltitude,              withDouble: location.altitude)
-            // TODO
-        }
-        self.update.fire()
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        switch status {
-        case .denied:
-            break
-        case .notDetermined:
-            fallthrough
-        case .authorizedAlways:
-            fallthrough
-        case .authorizedWhenInUse:
-            fallthrough
-        case .restricted:
-            manager.startUpdatingLocation()
-            manager.startUpdatingHeading()
-            manager.startMonitoringVisits()
-        }
-        
-        self.update.fire()
+struct ModelValueBeacon {
+    let regionIdentifier    : String
+    let proximityUUID       : String
+    let proximity           : CLProximity
+    let accuracy            : Double
+    let major               : UInt16
+    let minor               : UInt16
+    let rssi                : Int
+}
 
-    }
+protocol Model {
     
-    func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion) {
-        valueRegionsMonitored.value = manager.monitoredRegions.map {
-            return ValueRegion(identifier: $0.identifier, state: "?", notifyOnEntry: false, notifyOnExit: false)
-        }
-        self.update.fire()
-    }
+    var valueLocationCoordinateLatitude                 : BindingValue<ModelValue> { get }
+    var valueLocationCoordinateLongitude                : BindingValue<ModelValue> { get }
+    var valueLocationAltitude                           : BindingValue<ModelValue> { get }
+    var valueLocationFloor                              : BindingValue<ModelValue> { get }
+    var valueLocationAccuracyHorizontal                 : BindingValue<ModelValue> { get }
+    var valueLocationAccuracyVertical                   : BindingValue<ModelValue> { get }
+    var valueLocationTimestamp                          : BindingValue<ModelValue> { get }
+    var valueLocationSpeed                              : BindingValue<ModelValue> { get }
+    var valueLocationCourse                             : BindingValue<ModelValue> { get }
+    var valueLocationPlacemark                          : BindingValue<ModelValue> { get }
     
-    func locationManager(_ manager: CLLocationManager, didRangeBeacons beacons: [CLBeacon], in region: CLBeaconRegion) {
-        let filtered = valueBeaconsRanged.value?.filter {
-            return $0.regionIdentifier != region.identifier
-        } ?? []
-        valueBeaconsRanged.value = filtered + beacons.map {
-            ValueBeacon(regionIdentifier    : region.identifier,
-                        proximityUUID       : $0.proximityUUID.uuidString,
-                        proximity           : $0.proximity,
-                        accuracy            : $0.accuracy,
-                        major               : UInt16($0.major),
-                        minor               : UInt16($0.minor),
-                        rssi                : $0.rssi)
-        }
-        self.update.fire()
-    }
+    var valueHeadingMagnetic                            : BindingValue<ModelValue> { get }
+    var valueHeadingTrue                                : BindingValue<ModelValue> { get }
+    var valueHeadingAccuracy                            : BindingValue<ModelValue> { get }
+    var valueHeadingTimestamp                           : BindingValue<ModelValue> { get }
+    var valueHeadingX                                   : BindingValue<ModelValue> { get }
+    var valueHeadingY                                   : BindingValue<ModelValue> { get }
+    var valueHeadingZ                                   : BindingValue<ModelValue> { get }
     
-    func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
-        self.update.fire()
-    }
+    var valueBeaconUUID                                 : BindingValue<ModelValue> { get }
+    var valueBeaconMajor                                : BindingValue<ModelValue> { get }
+    var valueBeaconMinor                                : BindingValue<ModelValue> { get }
+    var valueBeaconIdentifier                           : BindingValue<ModelValue> { get }
     
-    func locationManager(_ manager: CLLocationManager, rangingBeaconsDidFailFor region: CLBeaconRegion, withError error: Error) {
-        self.update.fire()
-    }
+    var valueBeaconsRanged                              : BindingValue<[ModelValueBeacon]> { get }
     
-    func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool {
-        return false
-    }
+    var valueRegionsMonitored                           : BindingValue<[ModelValueRegion]> { get }
+    var valueRegionsRanged                              : BindingValue<[ModelValueRegion]> { get }
     
-    func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager) {
-        // TODO: "LOCATION UPDATES: PAUSED"
-        self.update.fire()
-    }
-    
-    func locationManagerDidResumeLocationUpdates(_ manager: CLLocationManager) {
-        self.update.fire()
-    }
+    var update                                          : BindingValue<Bool> { get }
+
 }

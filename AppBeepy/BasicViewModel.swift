@@ -10,35 +10,6 @@ import Foundation
 import CoreLocation
 import ASToolkit
 
-struct ViewModelData {
-    var sections    : [ViewModelSection] = []
-}
-
-struct ViewModelSection {
-    let title       : String
-    var rows        : [ViewModelRow] = []
-}
-
-struct ViewModelRow {
-    let title       : String
-    let value       : String
-    let changed     : Bool
-    
-    init(title:String, value:String, changed:Bool = false) {
-        self.title = title
-        self.value = value
-        self.changed = changed
-    }
-}
-
-protocol ViewModel {
-    
-    var update              : BindingValue<Bool> { get }
-    
-    var data                : ViewModelData { get }
-    
-}
-
 class BasicViewModel : ViewModel {
     
     internal var settings : Settings {
