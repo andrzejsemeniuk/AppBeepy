@@ -32,63 +32,33 @@ class Settings : GenericManagerOfSettings {
     
 
     var settingLayoutShowLocation                       = GenericSetting<Bool>          (key:"setting-layout-show-location", first:true)
-    // location/coordinate/latitude
     var settingLayoutShowLocationCoordinateLatitude     = GenericSetting<Bool>          (key:"setting-layout-show-location-coordinate-latitude", first:true)
-    // location/coordinate/longitude
     var settingLayoutShowLocationCoordinateLongitude    = GenericSetting<Bool>          (key:"setting-layout-show-location-coordinate-longitude", first:true)
-    // location/altitude
     var settingLayoutShowLocationAltitude               = GenericSetting<Bool>          (key:"setting-layout-show-location-altitude", first:true)
-    // location/floor
     var settingLayoutShowLocationFloor                  = GenericSetting<Bool>          (key:"setting-layout-show-location-floor", first:true)
-    // location/accuracy/horizontal
     var settingLayoutShowLocationAccuracyHorizontal     = GenericSetting<Bool>          (key:"setting-layout-show-location-accuracy-horizontal", first:true)
-    // location/accuracy/vertical
     var settingLayoutShowLocationAccuracyVertical       = GenericSetting<Bool>          (key:"setting-layout-show-location-accuracy-vertical", first:true)
-    // location/timestamp
     var settingLayoutShowLocationTimestamp              = GenericSetting<Bool>          (key:"setting-layout-show-location-timestamp", first:true)
-    // location/speed
     var settingLayoutShowLocationSpeed                  = GenericSetting<Bool>          (key:"setting-layout-show-location-speed", first:true)
-    // location/course
     var settingLayoutShowLocationCourse                 = GenericSetting<Bool>          (key:"setting-layout-show-location-course", first:true)
-    // location/placemark
     var settingLayoutShowLocationPlacemark              = GenericSetting<Bool>          (key:"setting-layout-show-location-placemark", first:true)
 
     var settingLayoutShowHeading                        = GenericSetting<Bool>          (key:"setting-layout-show-heading", first:true)
-    // heading/magnetic
     var settingLayoutShowHeadingMagnetic                = GenericSetting<Bool>          (key:"setting-layout-show-heading-magnetic", first:true)
-    // heading/true
     var settingLayoutShowHeadingTrue                    = GenericSetting<Bool>          (key:"setting-layout-show-heading-true", first:true)
-    // heading/accuracy
     var settingLayoutShowHeadingAccuracy                = GenericSetting<Bool>          (key:"setting-layout-show-heading-accuracy", first:true)
-    // heading/timestamp
     var settingLayoutShowHeadingTimestamp               = GenericSetting<Bool>          (key:"setting-layout-show-heading-timestamp", first:true)
-    // heading/x
     var settingLayoutShowHeadingX                       = GenericSetting<Bool>          (key:"setting-layout-show-heading-x", first:true)
-    // heading/y
     var settingLayoutShowHeadingY                       = GenericSetting<Bool>          (key:"setting-layout-show-heading-y", first:true)
-    // heading/z
     var settingLayoutShowHeadingZ                       = GenericSetting<Bool>          (key:"setting-layout-show-heading-z", first:true)
 
     var settingLayoutShowBeacon                         = GenericSetting<Bool>          (key:"setting-layout-show-beacon", first:true)
-    // beacon/uuid
-    var settingLayoutShowBeaconUUID                     = GenericSetting<Bool>          (key:"setting-layout-show-beacon-uuid", first:true)
-    // beacon/major
-    var settingLayoutShowBeaconMajor                    = GenericSetting<Bool>          (key:"setting-layout-show-beacon-major", first:true)
-    // beacon/minor
-    var settingLayoutShowBeaconMinor                    = GenericSetting<Bool>          (key:"setting-layout-show-beacon-minor", first:true)
-    // beacon/id
-    var settingLayoutShowBeaconId                       = GenericSetting<Bool>          (key:"setting-layout-show-beacon-id", first:true)
+
+    var settingLayoutShowBeaconsRanged                  = GenericSetting<Bool>          (key:"setting-layout-show-beacons-ranged", first:true)
 
     var settingLayoutShowRegions                        = GenericSetting<Bool>          (key:"setting-layout-show-regions", first:true)
-    // regions: monitored/ranged-beacons
     var settingLayoutShowRegionsMonitored               = GenericSetting<Bool>          (key:"setting-layout-show-regions-monitored", first:true)
     var settingLayoutShowRegionsRanged                  = GenericSetting<Bool>          (key:"setting-layout-show-regions-ranged", first:true)
-    // region/identifier
-    var settingLayoutShowRegionIdentifier               = GenericSetting<Bool>          (key:"setting-layout-show-region-identifier", first:true)
-    // region/state
-    var settingLayoutShowRegionState                    = GenericSetting<Bool>          (key:"setting-layout-show-region-state", first:true)
-    // region/notify-on-entry/exit
-    var settingLayoutShowRegionNotification             = GenericSetting<Bool>          (key:"setting-layout-show-region-notification", first:true)
     
 
     var settingLayout                                   = GenericSetting<String>        (key:"setting-layout", first:"")

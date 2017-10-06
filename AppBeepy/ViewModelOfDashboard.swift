@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreLocation
 import ASToolkit
 
 class ViewModelOfDashboard {
@@ -24,6 +25,12 @@ class ViewModelOfDashboard {
         let title       : String
         let value       : String
         let changed     : Bool
+        
+        init(title:String, value:String, changed:Bool = false) {
+            self.title = title
+            self.value = value
+            self.changed = changed
+        }
     }
     
     struct Data {
@@ -58,7 +65,7 @@ class ViewModelOfDashboard {
             if let value = value {
                 return Row(title:title, value:value.value ?? "?", changed:value.changed)
             }
-            return Row(title:title, value:"?", changed:false)
+            return Row(title:title, value:"?")
         }
         
         var data = Data()
@@ -66,34 +73,34 @@ class ViewModelOfDashboard {
         if settings.settingLayoutShowLocation.value {
             var rows : [Row] = []
             
-            if settings.settingLayoutShowLocationCoordinateLatitude.value {
+            if true || settings.settingLayoutShowLocationCoordinateLatitude.value {
                 rows.append(composeRowFromValue("LATITUDE",model.valueLocationCoordinateLatitude.value))
             }
-            if settings.settingLayoutShowLocationCoordinateLongitude.value {
+            if true || settings.settingLayoutShowLocationCoordinateLongitude.value {
                 rows.append(composeRowFromValue("LONGITUDE",model.valueLocationCoordinateLongitude.value))
             }
-            if settings.settingLayoutShowLocationAltitude.value {
+            if true || settings.settingLayoutShowLocationAltitude.value {
                 rows.append(composeRowFromValue("ALTITUDE",model.valueLocationAltitude.value))
             }
-            if settings.settingLayoutShowLocationFloor.value {
+            if true || settings.settingLayoutShowLocationFloor.value {
                 rows.append(composeRowFromValue("FLOOR",model.valueLocationFloor.value))
             }
-            if settings.settingLayoutShowLocationAccuracyHorizontal.value {
+            if true || settings.settingLayoutShowLocationAccuracyHorizontal.value {
                 rows.append(composeRowFromValue("ACCURACY/H",model.valueLocationAccuracyHorizontal.value))
             }
-            if settings.settingLayoutShowLocationAccuracyVertical.value {
+            if true || settings.settingLayoutShowLocationAccuracyVertical.value {
                 rows.append(composeRowFromValue("ACCURACY/H",model.valueLocationAccuracyVertical.value))
             }
-            if settings.settingLayoutShowLocationTimestamp.value {
+            if true || settings.settingLayoutShowLocationTimestamp.value {
                 rows.append(composeRowFromValue("TIMESTAMP",model.valueLocationTimestamp.value))
             }
-            if settings.settingLayoutShowLocationSpeed.value {
+            if true || settings.settingLayoutShowLocationSpeed.value {
                 rows.append(composeRowFromValue("SPEED",model.valueLocationSpeed.value))
             }
-            if settings.settingLayoutShowLocationCourse.value {
+            if true || settings.settingLayoutShowLocationCourse.value {
                 rows.append(composeRowFromValue("COURSE",model.valueLocationCourse.value))
             }
-            if settings.settingLayoutShowLocationPlacemark.value {
+            if true || settings.settingLayoutShowLocationPlacemark.value {
                 rows.append(composeRowFromValue("PLACEMARK",model.valueLocationPlacemark.value))
             }
 
@@ -103,50 +110,83 @@ class ViewModelOfDashboard {
         if settings.settingLayoutShowHeading.value {
             var rows : [Row] = []
             
-            if settings.settingLayoutShowHeadingMagnetic.value {
+            if true || settings.settingLayoutShowHeadingMagnetic.value {
                 rows.append(composeRowFromValue("MAGNETIC",model.valueHeadingMagnetic.value))
             }
-            if settings.settingLayoutShowHeadingTrue.value {
+            if true || settings.settingLayoutShowHeadingTrue.value {
                 rows.append(composeRowFromValue("TRUE",model.valueHeadingTrue.value))
             }
-            if settings.settingLayoutShowHeadingAccuracy.value {
+            if true || settings.settingLayoutShowHeadingAccuracy.value {
                 rows.append(composeRowFromValue("ACCURACY",model.valueHeadingAccuracy.value))
             }
-            if settings.settingLayoutShowHeadingTimestamp.value {
+            if true || settings.settingLayoutShowHeadingTimestamp.value {
                 rows.append(composeRowFromValue("TIMESTAMP",model.valueHeadingTimestamp.value))
             }
-            if settings.settingLayoutShowHeadingX.value {
+            if true || settings.settingLayoutShowHeadingX.value {
                 rows.append(composeRowFromValue("X",model.valueHeadingX.value))
             }
-            if settings.settingLayoutShowHeadingY.value {
+            if true || settings.settingLayoutShowHeadingY.value {
                 rows.append(composeRowFromValue("Y",model.valueHeadingY.value))
             }
-            if settings.settingLayoutShowHeadingZ.value {
+            if true || settings.settingLayoutShowHeadingZ.value {
                 rows.append(composeRowFromValue("Z",model.valueHeadingZ.value))
             }
 
             data.sections.append(Section(title:"HEADING", rows: rows))
         }
         
-        if settings.settingLayoutShowHeading.value {
+        if settings.settingLayoutShowBeaconsRanged.value {
             var rows : [Row] = []
             
-            if settings.settingLayoutShowBeaconUUID.value {
-                rows.append(composeRowFromValue("UUID",model.valueBeaconUUID.value))
-            }
-            if settings.settingLayoutShowBeaconMajor.value {
-                rows.append(composeRowFromValue("MAJOR",model.valueBeaconMajor.value))
-            }
-            if settings.settingLayoutShowBeaconMinor.value {
-                rows.append(composeRowFromValue("MINOR",model.valueBeaconMinor.value))
-            }
-            if settings.settingLayoutShowBeaconId.value {
-                rows.append(composeRowFromValue("IDENTIFIER",model.valueBeaconIdentifier.value))
+            for (index,beacon) in (model.valueBeaconsRanged.value ?? []).enumerated() {
+                
+                rows.append(Row(title:"BEACON",         value:"\(index)"))
+                rows.append(Row(title:"REGION",         value:beacon.regionIdentifier))
+                rows.append(Row(title:"PROXIMITY-UUID", value:beacon.proximityUUID))
+                rows.append(Row(title:"PROXIMITY",      value:"\(beacon.proximity.rawValue)"))
+                rows.append(Row(title:"ACCURACY",       value:"\(beacon.accuracy)"))
+                rows.append(Row(title:"MAJOR",          value:"\(beacon.major)"))
+                rows.append(Row(title:"MINOR",          value:"\(beacon.minor)"))
+                rows.append(Row(title:"RSSI",           value:"\(beacon.rssi)"))
             }
 
-            data.sections.append(Section(title:"BEACON", rows: rows))
+            data.sections.append(Section(title:"RANGED BEACONS", rows: rows))
         }
 
+        if settings.settingLayoutShowBeacon.value {
+            var rows : [Row] = []
+            
+            rows.append(composeRowFromValue("UUID",model.valueBeaconUUID.value))
+            rows.append(composeRowFromValue("MAJOR",model.valueBeaconMajor.value))
+            rows.append(composeRowFromValue("MINOR",model.valueBeaconMinor.value))
+            rows.append(composeRowFromValue("IDENTIFIER",model.valueBeaconIdentifier.value))
+            
+            data.sections.append(Section(title:"BEACON", rows: rows))
+        }
+        
+        if settings.settingLayoutShowRegions.value {
+
+            let createRegionRows : ([Model.ValueRegion])->([Row]) = { regions in
+                var rows : [Row] = []
+                
+                for (index,region) in regions.enumerated() {
+                    rows.append(Row(title:"REGION", value:"\(index)"))
+                    rows.append(Row(title:"IDENTIFIER", value:region.identifier))
+                    rows.append(Row(title:"STATE", value:region.state))
+                }
+                
+                return rows
+            }
+            
+            if settings.settingLayoutShowRegionsMonitored.value, let regions = model.valueRegionsMonitored.value {
+                data.sections.append(Section(title:"MONITORED REGIONS", rows: createRegionRows(regions)))
+            }
+            if settings.settingLayoutShowRegionsRanged.value, let regions = model.valueRegionsRanged.value {
+                data.sections.append(Section(title:"RANGED REGIONS", rows: createRegionRows(regions)))
+            }
+
+        }
+        
         self.data.value = data
     }
 }
