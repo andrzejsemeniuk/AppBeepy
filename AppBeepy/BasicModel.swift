@@ -125,6 +125,13 @@ extension BasicModel : CLLocationManagerDelegate {
             self.update(valueLocationCoordinateLatitude,    withDouble: location.coordinate.latitude)
             self.update(valueLocationCoordinateLongitude,   withDouble: location.coordinate.longitude)
             self.update(valueLocationAltitude,              withDouble: location.altitude)
+            self.update(valueLocationAccuracyHorizontal,    withDouble: location.horizontalAccuracy)
+            self.update(valueLocationAccuracyVertical,      withDouble: location.verticalAccuracy)
+            self.update(valueLocationTimestamp,             withString: "\(location.timestamp)")
+//            self.update(valueLocationPlacemark,              withDouble: location.)
+            self.update(valueLocationCourse,                withDouble: location.course)
+            self.update(valueLocationSpeed,                 withDouble: location.speed)
+            self.update(valueLocationFloor,                 withString: "\(location.floor?.level ?? -1)")
             // TODO
         }
         self.update.fire()
