@@ -19,7 +19,7 @@
 		577E07851F8403B3003808B6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 577E07831F8403B3003808B6 /* LaunchScreen.storyboard */; };
 		577E07901F8403B3003808B6 /* AppBeepyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577E078F1F8403B3003808B6 /* AppBeepyTests.swift */; };
 		577E079B1F8403B3003808B6 /* AppBeepyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577E079A1F8403B3003808B6 /* AppBeepyUITests.swift */; };
-		577E07AF1F845696003808B6 /* ViewModelOfDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577E07AE1F845696003808B6 /* ViewModelOfDashboard.swift */; };
+		577E07AF1F845696003808B6 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577E07AE1F845696003808B6 /* ViewModel.swift */; };
 		577E07B31F8456EF003808B6 /* TestsForViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577E07B21F8456EF003808B6 /* TestsForViewModel.swift */; };
 		577E07B51F8456FC003808B6 /* TestsForModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577E07B41F8456FC003808B6 /* TestsForModel.swift */; };
 		57E713F61F869BF000766C19 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E713F51F869BF000766C19 /* Model.swift */; };
@@ -61,7 +61,7 @@
 		577E07961F8403B3003808B6 /* AppBeepyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppBeepyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		577E079A1F8403B3003808B6 /* AppBeepyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBeepyUITests.swift; sourceTree = "<group>"; };
 		577E079C1F8403B3003808B6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		577E07AE1F845696003808B6 /* ViewModelOfDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelOfDashboard.swift; sourceTree = "<group>"; };
+		577E07AE1F845696003808B6 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		577E07B21F8456EF003808B6 /* TestsForViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestsForViewModel.swift; sourceTree = "<group>"; };
 		577E07B41F8456FC003808B6 /* TestsForModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestsForModel.swift; sourceTree = "<group>"; };
 		577E07B61F8457AD003808B6 /* SPECS.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = SPECS.txt; sourceTree = "<group>"; };
@@ -133,8 +133,9 @@
 			children = (
 				577E07861F8403B3003808B6 /* Info.plist */,
 				577E077A1F8403B3003808B6 /* AppDelegate.swift */,
+				57E713F51F869BF000766C19 /* Model.swift */,
 				577BD10E1F8575D400E5D2B0 /* Settings.swift */,
-				577E07AE1F845696003808B6 /* ViewModelOfDashboard.swift */,
+				577E07AE1F845696003808B6 /* ViewModel.swift */,
 				577E077C1F8403B3003808B6 /* ViewOfDashboard.swift */,
 				577BD1111F8576F600E5D2B0 /* ViewOfSettings.swift */,
 				577BD1131F85770400E5D2B0 /* ViewOfSettingsOfLayout.swift */,
@@ -142,7 +143,6 @@
 				577E07811F8403B3003808B6 /* Assets.xcassets */,
 				577E07831F8403B3003808B6 /* LaunchScreen.storyboard */,
 				577E077E1F8403B3003808B6 /* Main.storyboard */,
-				57E713F51F869BF000766C19 /* Model.swift */,
 			);
 			path = AppBeepy;
 			sourceTree = "<group>";
@@ -485,7 +485,7 @@
 			files = (
 				57E713F61F869BF000766C19 /* Model.swift in Sources */,
 				577E077D1F8403B3003808B6 /* ViewOfDashboard.swift in Sources */,
-				577E07AF1F845696003808B6 /* ViewModelOfDashboard.swift in Sources */,
+				577E07AF1F845696003808B6 /* ViewModel.swift in Sources */,
 				577BD1121F8576F600E5D2B0 /* ViewOfSettings.swift in Sources */,
 				577E077B1F8403B3003808B6 /* AppDelegate.swift in Sources */,
 				577BD1141F85770400E5D2B0 /* ViewOfSettingsOfLayout.swift in Sources */,
@@ -661,6 +661,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5AKM62S97F;
 				INFOPLIST_FILE = AppBeepy/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.andrzejsemeniuk.beepbeep.AppBeepy;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -677,6 +678,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5AKM62S97F;
 				INFOPLIST_FILE = AppBeepy/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.andrzejsemeniuk.beepbeep.AppBeepy;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -16,7 +16,7 @@ class ViewOfDashboard : UIViewController {
         return AppDelegate.settings
     }
 
-    var model : ViewModelOfDashboard!
+    var model : ViewModel!
     
     var table : UITableView!
     
@@ -47,12 +47,19 @@ class ViewOfDashboard : UIViewController {
         
         self.synchronizeWithSettings()
         
-        self.model?.data.listener = { [weak self] value in
+        self.model?.update.listener = { [weak self] value in
             self?.table?.reloadData()
+            self?.view.setNeedsLayout()
         }
         
     }
 
+    override func viewWillLayoutSubviews() {
+//        self.table?.reloadData()
+        self.model?.build()
+        super.viewWillLayoutSubviews()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -84,7 +91,7 @@ extension ViewOfDashboard : UITableViewDelegate {
 extension ViewOfDashboard : UITableViewDataSource {
 
     func tableView                     (_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return model?.data.value?.sections[safe:section]?.title
+        return model?.data.sections[safe:section]?.title
     }
 
     func tableView                     (_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
@@ -100,11 +107,11 @@ extension ViewOfDashboard : UITableViewDataSource {
     }
 
     func numberOfSections              (in tableView: UITableView) -> Int {
-        return model?.data.value?.sections.count ?? 0
+        return model?.data.sections.count ?? 0
     }
     
     func tableView                     (_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return model?.data.value?.sections[safe:section]?.rows.count ?? 0
+        return model?.data.sections[safe:section]?.rows.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -117,7 +124,7 @@ extension ViewOfDashboard : UITableViewDataSource {
         result.layoutMargins = .zero
         
         
-        if let row = model.data.value?.sections[indexPath.section].rows[indexPath.row] {
+        if let row = model.data.sections[safe:indexPath.section]?.rows[safe:indexPath.row] {
         
             let value = UILabel()
             result.accessoryView = value

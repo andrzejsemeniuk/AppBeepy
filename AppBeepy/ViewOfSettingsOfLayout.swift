@@ -69,54 +69,19 @@ class ViewOfSettingsOfLayout : GenericControllerOfSettings
     
     
     override func createSections() -> [Section]
-    {
-        let exclusiveDisplays : [Weak<GenericSetting<Bool>>] = { [weak self] in
-            guard let `self` = self else { return [] }
-            return [
-            ]
-            }()
-        
-        let applyToSettings: (String,Bool)->() = { [weak self] prefix, value in
-            for setting in self?.settings.collect(withPrefix:prefix) ?? [] {
-                if let setting = setting.object as? GenericSetting<Bool> {
-                    setting.value = true
-                }
-            }
-        }
-        
+    {        
         return [
             
-            Section(header  : "LOCATION",
+            Section(header  : "LAYOUT",
                 cells   : [
                     
-//                    createCellForUISwitch(settings.settingLayoutShowLocation, title: "All") { [weak self] value in
-//                        applyToSettings("settingLayoutShowLocation",value)
-//                        self?.tableView?.reloadSections(IndexSet.init(integer:1), with: .automatic)
-//                    },
-                    
-                    createCellForUISwitch(settings.settingLayoutShowLocationCoordinateLatitude, title: "Latitude"),
-                    
-//                    createCellForUISwitch(settings.settingComponentDisplayDotOn, title: "Dot", exclusive:exclusiveDisplays) { [weak self] value in
-//                        self?.tableView?.reloadSections(IndexSet.init(integer:1), with: .automatic)
-//                    },
-                    
-                    ]),
-            
-            Section(header  : "HEADING",
-                cells   : [
-                    
-                    createCellForUISwitch(settings.settingLayoutShowHeadingMagnetic, title: "Magnetic")
-                    
-                    ]),
-            
-            Section(header  : "BEACON",
-                cells   : [
-                    createCellForUISwitch(settings.settingLayoutShowBeaconUUID, title: "UUID")
-                    ]),
-            
-            Section(header  : "REGIONS",
-                cells   : [
-                    createCellForUISwitch(settings.settingLayoutShowRegionsMonitored, title: "Monitored")
+                    createCellForUISwitch(settings.settingLayoutShowLocation, title: "Location"),
+                    createCellForUISwitch(settings.settingLayoutShowHeading, title: "Heading"),
+                    createCellForUISwitch(settings.settingLayoutShowBeacon, title: "Beacon"),
+                    createCellForUISwitch(settings.settingLayoutShowBeaconsRanged, title: "Ranged Beacons"),
+                    createCellForUISwitch(settings.settingLayoutShowRegionsMonitored, title: "Monitored Regions"),
+                    createCellForUISwitch(settings.settingLayoutShowRegionsRanged, title: "Ranged Regions"),
+
                 ]),
             
         ]

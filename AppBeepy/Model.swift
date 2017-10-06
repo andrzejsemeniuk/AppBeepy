@@ -97,6 +97,8 @@ class Model : NSObject {
     var valueRegionsMonitored                           = BindingValue<[ValueRegion]>([])
     var valueRegionsRanged                              = BindingValue<[ValueRegion]>([])
 
+    var update                                          = BindingValue<Bool>(false)
+    
     var locationManager : CLLocationManager!
     
     override init() {
@@ -104,6 +106,8 @@ class Model : NSObject {
         
         self.locationManager = CLLocationManager()
         self.locationManager.delegate = self
+        
+        locationManager.requestWhenInUseAuthorization()
     }
     
     fileprivate func update(_ value:BindingValue<Value>!, withString:String) {
@@ -122,57 +126,85 @@ class Model : NSObject {
 extension Model : CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        
+        print("error: \(error)")
+        self.update.fire()
     }
     
     func locationManager(_ manager: CLLocationManager, didFinishDeferredUpdatesWithError error: Error?) {
-        
+        print("deferred-updates-with-error: \(error)")
+        self.update.fire()
     }
     
     func locationManager(_ manager: CLLocationManager, didVisit visit: CLVisit) {
         // TODO
+        self.update.fire()
     }
     
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
         valueRegionsMonitored.value = manager.monitoredRegions.map {
             return ValueRegion(identifier: $0.identifier, state: "?", notifyOnEntry: false, notifyOnExit: false)
         }
+        self.update.fire()
+
     }
     
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         valueRegionsMonitored.value = manager.monitoredRegions.map {
             return ValueRegion(identifier: $0.identifier, state: "?", notifyOnEntry: false, notifyOnExit: false)
         }
+        self.update.fire()
     }
     
     func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
         valueRegionsMonitored.value = manager.monitoredRegions.map {
             return ValueRegion(identifier: $0.identifier, state: "?", notifyOnEntry: false, notifyOnExit: false)
         }
+        self.update.fire()
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         if let heading = manager.heading {
             self.update(valueHeadingMagnetic,               withDouble: heading.magneticHeading)
+            // TODO
         }
+        self.update.fire()
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = manager.location {
+        if let location = locations.last {
             self.update(valueLocationCoordinateLatitude,    withDouble: location.coordinate.latitude)
             self.update(valueLocationCoordinateLongitude,   withDouble: location.coordinate.longitude)
             self.update(valueLocationAltitude,              withDouble: location.altitude)
+            // TODO
         }
+        self.update.fire()
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        switch status {
+        case .denied:
+            break
+        case .notDetermined:
+            fallthrough
+        case .authorizedAlways:
+            fallthrough
+        case .authorizedWhenInUse:
+            fallthrough
+        case .restricted:
+            manager.startUpdatingLocation()
+            manager.startUpdatingHeading()
+            manager.startMonitoringVisits()
+        }
         
+        self.update.fire()
+
     }
     
     func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion) {
         valueRegionsMonitored.value = manager.monitoredRegions.map {
             return ValueRegion(identifier: $0.identifier, state: "?", notifyOnEntry: false, notifyOnExit: false)
         }
+        self.update.fire()
     }
     
     func locationManager(_ manager: CLLocationManager, didRangeBeacons beacons: [CLBeacon], in region: CLBeaconRegion) {
@@ -188,14 +220,15 @@ extension Model : CLLocationManagerDelegate {
                         minor               : UInt16($0.minor),
                         rssi                : $0.rssi)
         }
+        self.update.fire()
     }
     
     func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
-        
+        self.update.fire()
     }
     
     func locationManager(_ manager: CLLocationManager, rangingBeaconsDidFailFor region: CLBeaconRegion, withError error: Error) {
-        
+        self.update.fire()
     }
     
     func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool {
@@ -203,10 +236,11 @@ extension Model : CLLocationManagerDelegate {
     }
     
     func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager) {
-        
+        // TODO: "LOCATION UPDATES: PAUSED"
+        self.update.fire()
     }
     
     func locationManagerDidResumeLocationUpdates(_ manager: CLLocationManager) {
-        
+        self.update.fire()
     }
 }

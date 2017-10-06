@@ -10,7 +10,7 @@ import Foundation
 import CoreLocation
 import ASToolkit
 
-class ViewModelOfDashboard {
+class ViewModel {
     
     internal var settings : Settings {
         return AppDelegate.settings
@@ -45,6 +45,11 @@ class ViewModelOfDashboard {
                 self?.build()
             }
             
+            model.update                                .listener = { [weak self] value in
+//                self?.build()
+                self?.update.fire()
+            }
+            
             model.valueLocationCoordinateLatitude       .listener = listener
             model.valueLocationCoordinateLongitude      .listener = listener
             model.valueLocationAltitude                 .listener = listener
@@ -53,7 +58,9 @@ class ViewModelOfDashboard {
         }
     }
     
-    var data            : BindingValue<Data> = BindingValue<Data>()
+    var data            : Data = Data()
+    
+    var update          : BindingValue<Bool> = BindingValue<Bool>(false)
     
     func build() {
         
@@ -73,36 +80,16 @@ class ViewModelOfDashboard {
         if settings.settingLayoutShowLocation.value {
             var rows : [Row] = []
             
-            if true || settings.settingLayoutShowLocationCoordinateLatitude.value {
-                rows.append(composeRowFromValue("LATITUDE",model.valueLocationCoordinateLatitude.value))
-            }
-            if true || settings.settingLayoutShowLocationCoordinateLongitude.value {
-                rows.append(composeRowFromValue("LONGITUDE",model.valueLocationCoordinateLongitude.value))
-            }
-            if true || settings.settingLayoutShowLocationAltitude.value {
-                rows.append(composeRowFromValue("ALTITUDE",model.valueLocationAltitude.value))
-            }
-            if true || settings.settingLayoutShowLocationFloor.value {
-                rows.append(composeRowFromValue("FLOOR",model.valueLocationFloor.value))
-            }
-            if true || settings.settingLayoutShowLocationAccuracyHorizontal.value {
-                rows.append(composeRowFromValue("ACCURACY/H",model.valueLocationAccuracyHorizontal.value))
-            }
-            if true || settings.settingLayoutShowLocationAccuracyVertical.value {
-                rows.append(composeRowFromValue("ACCURACY/H",model.valueLocationAccuracyVertical.value))
-            }
-            if true || settings.settingLayoutShowLocationTimestamp.value {
-                rows.append(composeRowFromValue("TIMESTAMP",model.valueLocationTimestamp.value))
-            }
-            if true || settings.settingLayoutShowLocationSpeed.value {
-                rows.append(composeRowFromValue("SPEED",model.valueLocationSpeed.value))
-            }
-            if true || settings.settingLayoutShowLocationCourse.value {
-                rows.append(composeRowFromValue("COURSE",model.valueLocationCourse.value))
-            }
-            if true || settings.settingLayoutShowLocationPlacemark.value {
-                rows.append(composeRowFromValue("PLACEMARK",model.valueLocationPlacemark.value))
-            }
+            rows.append(composeRowFromValue("LATITUDE",model.valueLocationCoordinateLatitude.value))
+            rows.append(composeRowFromValue("LONGITUDE",model.valueLocationCoordinateLongitude.value))
+            rows.append(composeRowFromValue("ALTITUDE",model.valueLocationAltitude.value))
+            rows.append(composeRowFromValue("FLOOR",model.valueLocationFloor.value))
+            rows.append(composeRowFromValue("ACCURACY/HORIZONTAL",model.valueLocationAccuracyHorizontal.value))
+            rows.append(composeRowFromValue("ACCURACY/VERTICAL",model.valueLocationAccuracyVertical.value))
+            rows.append(composeRowFromValue("TIMESTAMP",model.valueLocationTimestamp.value))
+            rows.append(composeRowFromValue("SPEED",model.valueLocationSpeed.value))
+            rows.append(composeRowFromValue("COURSE",model.valueLocationCourse.value))
+            rows.append(composeRowFromValue("PLACEMARK",model.valueLocationPlacemark.value))
 
             data.sections.append(Section(title:"LOCATION", rows: rows))
         }
@@ -110,27 +97,13 @@ class ViewModelOfDashboard {
         if settings.settingLayoutShowHeading.value {
             var rows : [Row] = []
             
-            if true || settings.settingLayoutShowHeadingMagnetic.value {
-                rows.append(composeRowFromValue("MAGNETIC",model.valueHeadingMagnetic.value))
-            }
-            if true || settings.settingLayoutShowHeadingTrue.value {
-                rows.append(composeRowFromValue("TRUE",model.valueHeadingTrue.value))
-            }
-            if true || settings.settingLayoutShowHeadingAccuracy.value {
-                rows.append(composeRowFromValue("ACCURACY",model.valueHeadingAccuracy.value))
-            }
-            if true || settings.settingLayoutShowHeadingTimestamp.value {
-                rows.append(composeRowFromValue("TIMESTAMP",model.valueHeadingTimestamp.value))
-            }
-            if true || settings.settingLayoutShowHeadingX.value {
-                rows.append(composeRowFromValue("X",model.valueHeadingX.value))
-            }
-            if true || settings.settingLayoutShowHeadingY.value {
-                rows.append(composeRowFromValue("Y",model.valueHeadingY.value))
-            }
-            if true || settings.settingLayoutShowHeadingZ.value {
-                rows.append(composeRowFromValue("Z",model.valueHeadingZ.value))
-            }
+            rows.append(composeRowFromValue("MAGNETIC",model.valueHeadingMagnetic.value))
+            rows.append(composeRowFromValue("TRUE",model.valueHeadingTrue.value))
+            rows.append(composeRowFromValue("ACCURACY",model.valueHeadingAccuracy.value))
+            rows.append(composeRowFromValue("TIMESTAMP",model.valueHeadingTimestamp.value))
+            rows.append(composeRowFromValue("X",model.valueHeadingX.value))
+            rows.append(composeRowFromValue("Y",model.valueHeadingY.value))
+            rows.append(composeRowFromValue("Z",model.valueHeadingZ.value))
 
             data.sections.append(Section(title:"HEADING", rows: rows))
         }
@@ -187,6 +160,7 @@ class ViewModelOfDashboard {
 
         }
         
-        self.data.value = data
+        self.data = data
     }
+    
 }
