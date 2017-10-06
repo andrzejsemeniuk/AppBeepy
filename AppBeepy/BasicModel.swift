@@ -110,7 +110,12 @@ extension BasicModel : CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         if let heading = manager.heading {
             self.update(valueHeadingMagnetic,               withDouble: heading.magneticHeading)
-            // TODO
+            self.update(valueHeadingTrue,                   withDouble: heading.trueHeading)
+            self.update(valueHeadingAccuracy,               withDouble: heading.headingAccuracy)
+            self.update(valueHeadingTimestamp,              withString: "\(heading.timestamp)")
+            self.update(valueHeadingX,                      withDouble: heading.x)
+            self.update(valueHeadingY,                      withDouble: heading.y)
+            self.update(valueHeadingZ,                      withDouble: heading.z)
         }
         self.update.fire()
     }
@@ -136,9 +141,12 @@ extension BasicModel : CLLocationManagerDelegate {
         case .authorizedWhenInUse:
             fallthrough
         case .restricted:
+            manager.requestLocation()
             manager.startUpdatingLocation()
             manager.startUpdatingHeading()
             manager.startMonitoringVisits()
+            manager.pausesLocationUpdatesAutomatically=false
+            manager.disallowDeferredLocationUpdates()
         }
         
         self.update.fire()

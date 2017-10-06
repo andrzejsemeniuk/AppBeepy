@@ -32,7 +32,7 @@ struct ViewModelRow {
 
 protocol ViewModel {
     
-    var update              : BindingValue<Bool> { get }
+    var dirty               : BindingValue<Bool> { get }
     
     var data                : ViewModelData { get }
     

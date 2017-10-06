@@ -21,34 +21,64 @@ class BasicViewModel : ViewModel {
             guard let model = model else { return }
             
             let listener : (ModelValue?)->() = { [weak self] value in
-                self?._dirty = true
-                self?.update.value = true
+                self?.dirty.value = true
             }
             
             model.valueLocationCoordinateLatitude       .listener = listener
             model.valueLocationCoordinateLongitude      .listener = listener
             model.valueLocationAltitude                 .listener = listener
+            model.valueLocationFloor                    .listener = listener
+            model.valueLocationSpeed                    .listener = listener
+            model.valueLocationCourse                   .listener = listener
+            model.valueLocationPlacemark                .listener = listener
+            model.valueLocationTimestamp                .listener = listener
+            model.valueLocationAccuracyVertical         .listener = listener
+            model.valueLocationAccuracyHorizontal       .listener = listener
+
+            model.valueHeadingMagnetic                  .listener = listener
+            model.valueHeadingTrue                      .listener = listener
+            model.valueHeadingAccuracy                  .listener = listener
+            model.valueHeadingTimestamp                 .listener = listener
+            model.valueHeadingX                         .listener = listener
+            model.valueHeadingY                         .listener = listener
+            model.valueHeadingZ                         .listener = listener
+
+            model.valueBeaconUUID                       .listener = listener
+            model.valueBeaconMajor                      .listener = listener
+            model.valueBeaconMinor                      .listener = listener
+            model.valueBeaconIdentifier                 .listener = listener
+
+            model.valueBeaconsRanged                    .listener = { [weak self] value in
+                self?.dirty.value = true
+            }
+
+            model.valueRegionsRanged                    .listener = { [weak self] value in
+                self?.dirty.value = true
+            }
+            
+            model.valueRegionsMonitored                 .listener = { [weak self] value in
+                self?.dirty.value = true
+            }
             
             build()
         }
     }
     
-    let update          = BindingValue<Bool>(false)
+    let dirty           = BindingValue<Bool>(false)
     
     var data            : ViewModelData {
         get {
-            if _dirty {
+            if let flag = dirty.value, flag {
                 build()
-                _dirty = false
+                dirty.value = false
             }
             return _data
         }
     }
 
     private var _data   = ViewModelData()
-    private var _dirty  = true
     
-    func build() {
+    private func build() {
         
         guard let model = model else {
             return
@@ -147,7 +177,8 @@ class BasicViewModel : ViewModel {
         }
         
         self._data = data
-        self._dirty = false
+        
+        self.dirty.value = false
     }
     
 }
