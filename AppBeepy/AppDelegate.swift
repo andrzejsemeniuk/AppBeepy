@@ -11,11 +11,64 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window: UIWindow?
+    internal static var settings                        : Settings = {
+        let result = Settings()
+        //        result.reset()
+        return result
+    }()
+    
+    internal static var rootViewController              : UIViewController! {
+        return UIApplication.rootViewController
+    }
+    
+    internal static var viewOfDashboard                 : ViewOfDashboard = {
+        let result = ViewOfDashboard()
+        let model = Model()
+        let viewmodel = ViewModel()
+        viewmodel.model = model
+        result.model = viewmodel
+        return result
+    }()
+    
+    internal static var viewOfSettings                  : ViewOfSettings = {
+        return ViewOfSettings()
+    }()
+    
+    internal static var viewOfSettingsOfLayout          : ViewOfSettingsOfLayout = {
+        return ViewOfSettingsOfLayout()
+    }()
+    
 
+    internal var window: UIWindow?
+
+    internal static var instance:AppDelegate! = {
+        return UIApplication.shared.delegate as! AppDelegate
+    }()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        let window                  = UIWindow()
+        
+        self.window                 = window
+        
+        window.screen               = UIScreen.main
+        window.bounds               = window.screen.bounds
+        window.windowLevel          = UIWindowLevelNormal
+        
+        let vc = UINavigationController(rootViewController:AppDelegate.viewOfDashboard)
+        
+        vc.setNavigationBarHidden(false, animated:true)
+        
+        window.rootViewController   = vc
+        
+        window.makeKeyAndVisible()
+        
+        if AppDelegate.settings.flagFirstTime.value {
+            AppDelegate.settings.flagFirstTime.value = false
+            AppDelegate.settings.configurationLoadCurrent()
+        }
+        
+        AppDelegate.settings.synchronize()
+        
         return true
     }
 
@@ -41,7 +94,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-
+    internal class func synchronizeWithSettings() {
+    }
 }
 
 // https://developer.apple.com/documentation/corelocation/turning_an_ios_device_into_an_ibeacon
