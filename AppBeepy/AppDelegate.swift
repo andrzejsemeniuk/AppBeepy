@@ -23,8 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     internal static var viewOfDashboard                 : ViewOfDashboard = {
         let result = ViewOfDashboard()
-        let model = Model()
-        let viewmodel = ViewModel()
+        let model = BasicModel()
+        let viewmodel = BasicViewModel()
         viewmodel.model = model
         result.model = viewmodel
         return result

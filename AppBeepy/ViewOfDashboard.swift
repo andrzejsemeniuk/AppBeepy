@@ -47,19 +47,15 @@ class ViewOfDashboard : UIViewController {
         
         self.synchronizeWithSettings()
         
-        self.model?.update.listener = { [weak self] value in
-            self?.table?.reloadData()
-            self?.view.setNeedsLayout()
+        self.model?.dirty.listener = { [weak self] value in
+            if let value = value, value {
+                self?.table?.reloadData()
+                self?.view.setNeedsLayout()
+            }
         }
         
     }
 
-    override func viewWillLayoutSubviews() {
-//        self.table?.reloadData()
-        self.model?.build()
-        super.viewWillLayoutSubviews()
-    }
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
