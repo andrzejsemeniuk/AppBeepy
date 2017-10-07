@@ -37,8 +37,8 @@ class ViewOfDashboard : UIViewController {
         
         self.title = "Beepy"
         
-        if false {
-            let buttonForSettings = UIBarButtonItem.init(title: "Settings", style:.plain ,target: self, action: #selector(ViewOfDashboard.tapOnButtonForSettings(_:)))
+        if true {
+            let buttonForSettings = UIBarButtonItem.init(title: ">", style:.plain ,target: self, action: #selector(ViewOfDashboard.tapOnButtonForSettings(_:)))
             //        let buttonForSettings = UIBarButtonItem.init(title: "\u{2699}", style:.plain ,target: self, action: #selector(ControllerOfDashboard.tapOnButtonForSettings(_:)))
             //        let buttonForSettings = UIBarButtonItem.init(barButtonSystemItem: .compose , target: self, action: #selector(ControllerOfDashboard.tapOnButtonForSettings(_:)))
             

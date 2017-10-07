@@ -93,6 +93,10 @@ class Settings : GenericManagerOfSettings {
 
     
     
+    var settingStoredBeacons                            = GenericSetting<String>        (key:"setting-stored-beacons",first:"")
+    var settingStoredBeaconRegions                      = GenericSetting<String>        (key:"setting-stored-beacon-regions",first:"")
+    var settingStoredGeoRegions                         = GenericSetting<String>        (key:"setting-stored-geo-regions",first:"")
+
     
     var configurationCurrent                            = GenericSetting<String>        (key:"configuration-current", first: "Default")
     var configurationListPredefined                     = GenericSetting<String>        (key:"configuration-list-predefined", first:"Default,All")

@@ -10,11 +10,9 @@ import Foundation
 import UIKit
 import ASToolkit
 
-// TODO: MOVE RGB/HSB/CMYK VALUE DISPLAYES INTO OWN SECTION
-
-// TODO: REMOVE SIZING PREFERENCES UNTIL NEXT VERSION
-// TODO: PERHAPS HAVE A SINGLE SIZE SETTING FOR EVERYTHING
-// TODO: STORE/LOAD COLOR PALETTE
+// TODO: ADD IBEACON SECTION
+// TODO: ADD MONITORED-GEOGRAPHICAL-REGIONS SECTION
+// TODO: ADD MONITORED-BEACON-REGIONS SECTION
 
 class ViewOfSettings : GenericControllerOfSettings
 {
@@ -328,9 +326,45 @@ class ViewOfSettings : GenericControllerOfSettings
                         
                         ]),
             
+            // authorization status
+            // region entered/exited
+            
+            // define iBeacon:
+            //  on? UUID,MAJ,MIN,ID // list
+            // Regions to monitor:
+            //  GEO: LAT,LONG,RADIUS,ID,on? // list
+            //  BEACON: UUID,ID, on? // list
+            
+            Section(header  : "iBeacon",
+                    footer  : "Swipe to delete, tap to edit, switch to activate/deactivate", // only 1 can be activated at a time
+                    cells   : [
+                        
+                        
+                        ]),
+            
+            Section(header  : "MONITORED GEOGRAPHICAL REGIONS",
+                    footer  : "Swipe to delete, tap to edit, switch to activate/deactivate",
+                    cells   : [
+                        // lat/long/radius/id [map->]?
+                        // "add ..." // pushes a new controller with fields to edit (lat/long/radius/id)
+                        //  use map screen to define?
+                ]),
+            
+            Section(header  : "MONITORED BEACON REGIONS",
+                    footer  : "Swipe to delete, tap to edit, switch to activate/deactivate",
+                    cells   : [
+                        // uuid/id [map->]?
+                        // "add ..." // pushes a new controller with fields to edit (uuid/id)
+                ]),
+            
             Section(header  : "APP",
                     footer  : "",
                     cells   : [
+                        
+                        // scroll to most recently updated row?
+                        // flash most recently updated row?
+                        // map?
+                        // use --- or > as settings icon
                         
                         createCellForUIColor1(settings.settingColorBackground, title: "Background Color") { [weak self] in
                             self?.settings.synchronize()
