@@ -69,7 +69,63 @@ struct ModelValueBeacon {
     let rssi                : Int
 }
 
-protocol Model {
+struct StoredBeacon {
+    var UUID        : String = ""
+    var major       : UInt16 = 0
+    var minor       : UInt16 = 0
+    var identifier  : String = ""
+    
+    init() {}
+    init(fromString string:String) {
+        let elements    = string.split("|")
+        self.UUID       = elements[safe:0]?.replacingOccurrences(of: "%", with: "").replacingOccurrences(of: "|", with: "") ?? "?"
+        self.major      = UInt16(elements[safe:1] ?? "0") ?? 0
+        self.minor      = UInt16(elements[safe:2] ?? "0") ?? 0
+        self.identifier = elements[safe:3]?.replacingOccurrences(of: "%", with: "").replacingOccurrences(of: "|", with: "") ?? "?"
+    }
+    
+    var encoded:String {
+        return "\(UUID)|\(major)|\(minor)|\(identifier)"
+    }
+}
+
+struct StoredRegionForBeacon {
+    var UUID        : String = ""
+    var identifier  : String = ""
+    
+    init() {}
+    init(fromString string:String) {
+        let elements    = string.split("|")
+        self.UUID       = elements[safe:0]?.replacingOccurrences(of: "%", with: "").replacingOccurrences(of: "|", with: "") ?? "?"
+        self.identifier = elements[safe:1]?.replacingOccurrences(of: "%", with: "").replacingOccurrences(of: "|", with: "") ?? "?"
+    }
+    
+    var encoded:String {
+        return "\(UUID)|\(identifier)"
+    }
+}
+
+struct StoredRegionForLocation {
+    var latitude    : CLLocationDegrees   = 0
+    var longitude   : CLLocationDegrees   = 0
+    var radius      : CLLocationDistance  = 0
+    var identifier  : String              = ""
+    
+    init() {}
+    init(fromString string:String) {
+        let elements    = string.split("|")
+        self.latitude   = Double(elements[safe:0] ?? "0") ?? 0
+        self.longitude  = Double(elements[safe:1] ?? "0") ?? 0
+        self.radius     = Double(elements[safe:2] ?? "0") ?? 0
+        self.identifier = elements[safe:1]?.replacingOccurrences(of: "%", with: "").replacingOccurrences(of: "|", with: "") ?? "?"
+    }
+    
+    var encoded:String {
+        return "\(latitude)|\(longitude)|\(radius)|\(identifier)"
+    }
+}
+
+protocol Model : class {
     
     var valueLocationCoordinateLatitude                 : BindingValue<ModelValue> { get }
     var valueLocationCoordinateLongitude                : BindingValue<ModelValue> { get }
@@ -101,5 +157,20 @@ protocol Model {
     var valueRegionsRanged                              : BindingValue<[ModelValueRegion]> { get }
     
     var update                                          : BindingValue<Bool> { get }
+
+    
+    func storedBeaconsAdd                               (_ beacon:StoredBeacon)
+    func storedBeaconsRemove                            (withUUID:String)
+    func storedBeaconsGet                               () -> [StoredBeacon]
+    
+    
+    func storedRegionBeaconsAdd                         (_ beacon:StoredRegionForBeacon)
+    func storedRegionBeaconsRemove                      (withUUID:String)
+    func storedRegionBeaconsGet                         () -> [StoredRegionForBeacon]
+    
+    
+    func storedRegionLocationsAdd                       (_ beacon:StoredRegionForBeacon)
+    func storedRegionLocationsRemove                    (withUUID:String)
+    func storedRegionLocationsGet                       () -> [StoredRegionForBeacon]
 
 }

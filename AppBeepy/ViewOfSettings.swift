@@ -335,10 +335,27 @@ class ViewOfSettings : GenericControllerOfSettings
             //  GEO: LAT,LONG,RADIUS,ID,on? // list
             //  BEACON: UUID,ID, on? // list
             
-            Section(header  : "iBeacon",
-                    footer  : "Swipe to delete, tap to edit, switch to activate/deactivate", // only 1 can be activated at a time
+            Section(header  : "SETUP",
+                    footer  : "",
                     cells   : [
                         
+                        createCellForTap(title: "iBeacon", setup:{ cell,index in
+                            cell.accessoryType  = .disclosureIndicator
+                        }) { [weak self] in
+                            self?.navigationController?.pushViewController(AppDelegate.viewOfSettingsOfiBeacon, animated: true)
+                        },
+                        
+                        createCellForTap(title: "Monitored Beacons", setup:{ cell,index in
+                            cell.accessoryType  = .disclosureIndicator
+                        }) { [weak self] in
+                            self?.navigationController?.pushViewController(AppDelegate.viewOfSettingsOfMonitoredBeacons, animated: true)
+                        },
+                        
+                        createCellForTap(title: "Monitored Locations", setup:{ cell,index in
+                            cell.accessoryType  = .disclosureIndicator
+                        }) { [weak self] in
+                            self?.navigationController?.pushViewController(AppDelegate.viewOfSettingsOfMonitoredLocations, animated: true)
+                        },
                         
                         ]),
             

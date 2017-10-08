@@ -11,17 +11,17 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    internal static var settings                        : Settings = {
+    internal static var settings                            : Settings = {
         let result = Settings()
         //        result.reset()
         return result
     }()
     
-    internal static var rootViewController              : UIViewController! {
+    internal static var rootViewController                  : UIViewController! {
         return UIApplication.rootViewController
     }
     
-    internal static var viewOfDashboard                 : ViewOfDashboard = {
+    internal static var viewOfDashboard                     : ViewOfDashboard = {
         let result = ViewOfDashboard()
         let model = BasicModel()
         let viewmodel = BasicViewModel()
@@ -30,12 +30,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return result
     }()
     
-    internal static var viewOfSettings                  : ViewOfSettings = {
+    internal static var viewOfSettings                      : ViewOfSettings = {
         return ViewOfSettings()
     }()
     
-    internal static var viewOfSettingsOfLayout          : ViewOfSettingsOfLayout = {
+    internal static var viewOfSettingsOfLayout              : ViewOfSettingsOfLayout = {
         return ViewOfSettingsOfLayout()
+    }()
+    
+    internal static var viewOfSettingsOfiBeacon             : ViewOfSettingsOfiBeacon = {
+        return ViewOfSettingsOfiBeacon()
+    }()
+    
+    internal static var viewOfSettingsOfMonitoredBeacons    : ViewOfSettingsOfMonitoredBeaconRegions = {
+        return ViewOfSettingsOfMonitoredBeaconRegions()
+    }()
+    
+    internal static var viewOfSettingsOfMonitoredLocations  : ViewOfSettingsOfMonitoredGeoRegions = {
+        return ViewOfSettingsOfMonitoredGeoRegions()
     }()
     
 

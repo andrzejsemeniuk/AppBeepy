@@ -76,25 +76,7 @@ class BasicModel : NSObject, Model {
     
     
     
-    struct Beacon {
-        var UUID        : String
-        var major       : UInt16
-        var minor       : UInt16
-        var identifier  : String
-        
-        init(fromString string:String) {
-            let elements    = string.split("|")
-            self.UUID       = elements[safe:0]?.replacingOccurrences(of: "%", with: "").replacingOccurrences(of: "|", with: "") ?? "?"
-            self.major      = UInt16(elements[safe:1] ?? "0") ?? 0
-            self.minor      = UInt16(elements[safe:2] ?? "0") ?? 0
-            self.identifier = elements[safe:3]?.replacingOccurrences(of: "%", with: "").replacingOccurrences(of: "|", with: "") ?? "?"
-        }
-        
-        var encoded:String {
-            return "\(UUID)|\(major)|\(minor)|\(identifier)"
-        }
-    }
-    func storedBeaconsAdd           (_ beacon:Beacon) {
+    func storedBeaconsAdd           (_ beacon:StoredBeacon) {
         settings.settingStoredBeacons.value = settings.settingStoredBeacons.value.appended(with:beacon.encoded,delimiter:"%")
     }
     func storedBeaconsRemove        (withUUID:String) {
@@ -105,33 +87,19 @@ class BasicModel : NSObject, Model {
             return true
             }.joined(separator:"%")
     }
-    func storedBeaconsGet           () -> [Beacon] {
+    func storedBeaconsGet           () -> [StoredBeacon] {
         return settings.settingStoredBeacons.value.split("%").map {
-            return Beacon.init(fromString: $0)
+            return StoredBeacon.init(fromString: $0)
         }
     }
     
     
     
     
-    struct RegionForBeacon {
-        var UUID        : String
-        var identifier  : String
-
-        init(fromString string:String) {
-            let elements    = string.split("|")
-            self.UUID       = elements[safe:0]?.replacingOccurrences(of: "%", with: "").replacingOccurrences(of: "|", with: "") ?? "?"
-            self.identifier = elements[safe:1]?.replacingOccurrences(of: "%", with: "").replacingOccurrences(of: "|", with: "") ?? "?"
-        }
-        
-        var encoded:String {
-            return "\(UUID)|\(identifier)"
-        }
-    }
-    func regionBeaconsAdd           (_ beacon:RegionForBeacon) {
+    func storedRegionBeaconsAdd           (_ beacon:StoredRegionForBeacon) {
         settings.settingStoredBeaconRegions.value = settings.settingStoredBeaconRegions.value.appended(with:beacon.encoded,delimiter:"%")
     }
-    func regionBeaconsRemove        (withUUID:String) {
+    func storedRegionBeaconsRemove        (withUUID:String) {
         settings.settingStoredBeaconRegions.value = settings.settingStoredBeaconRegions.value.split("%").filter {
             if let uuid = $0.split("|")[safe:0], uuid == withUUID {
                 return false
@@ -139,9 +107,9 @@ class BasicModel : NSObject, Model {
             return true
             }.joined(separator:"%")
     }
-    func regionBeaconsGet           () -> [RegionForBeacon] {
+    func storedRegionBeaconsGet           () -> [StoredRegionForBeacon] {
         return settings.settingStoredBeaconRegions.value.split("%").map {
-            return RegionForBeacon.init(fromString: $0)
+            return StoredRegionForBeacon.init(fromString: $0)
         }
     }
     
@@ -149,28 +117,10 @@ class BasicModel : NSObject, Model {
 
     
     
-    struct RegionForLocation {
-        var latitude    : CLLocationDegrees
-        var longitude   : CLLocationDegrees
-        var radius      : CLLocationDistance
-        var identifier  : String
-        
-        init(fromString string:String) {
-            let elements    = string.split("|")
-            self.latitude   = Double(elements[safe:0] ?? "0") ?? 0
-            self.longitude  = Double(elements[safe:1] ?? "0") ?? 0
-            self.radius     = Double(elements[safe:2] ?? "0") ?? 0
-            self.identifier = elements[safe:1]?.replacingOccurrences(of: "%", with: "").replacingOccurrences(of: "|", with: "") ?? "?"
-        }
-        
-        var encoded:String {
-            return "\(latitude)|\(longitude)|\(radius)|\(identifier)"
-        }
-    }
-    func regionLocationsAdd         (_ beacon:RegionForBeacon) {
+    func storedRegionLocationsAdd         (_ beacon:StoredRegionForBeacon) {
         settings.settingStoredGeoRegions.value = settings.settingStoredGeoRegions.value.appended(with:beacon.encoded,delimiter:"%")
     }
-    func regionLocationsRemove      (withUUID:String) {
+    func storedRegionLocationsRemove      (withUUID:String) {
         settings.settingStoredGeoRegions.value = settings.settingStoredGeoRegions.value.split("%").filter {
             if let uuid = $0.split("|")[safe:0], uuid == withUUID {
                 return false
@@ -178,9 +128,9 @@ class BasicModel : NSObject, Model {
             return true
             }.joined(separator:"%")
     }
-    func regionLocationsGet         () -> [RegionForBeacon] {
+    func storedRegionLocationsGet         () -> [StoredRegionForBeacon] {
         return settings.settingStoredGeoRegions.value.split("%").map {
-            return RegionForBeacon.init(fromString: $0)
+            return StoredRegionForBeacon.init(fromString: $0)
         }
     }
     
