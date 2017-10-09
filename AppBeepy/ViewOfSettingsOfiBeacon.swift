@@ -12,7 +12,7 @@ import ASToolkit
 
 class ViewModelOfSettingsOfiBeacon : NSObject {
     
-    weak var model : Model!
+    var model : Model!
     
 }
 
@@ -26,7 +26,7 @@ class ViewOfSettingsOfiBeacon : UITableViewController
     }
     
     
-    weak var viewModel : ViewModelOfSettingsOfiBeacon!
+    var viewModel : ViewModelOfSettingsOfiBeacon!
     
     
     override func viewDidLoad()
@@ -59,6 +59,10 @@ class ViewOfSettingsOfiBeacon : UITableViewController
     
     
     @objc func tapOnButtonForAdd(_ item:UIBarButtonItem) {
+        if debug {
+            print("beacons string: \(settings.settingStoredBeacons.value)")
+            print(self.viewModel.model.storedBeaconsGet())
+        }
         self.navigationController?.createAlertForInput(title: "Enter Identifier", message: "Identifier is a unique name", value: "", ok: "OK", cancel: "Cancel") { [weak self] identifier in
             
             if self?.viewModel?.model?.storedBeaconsGet().contains(where: { $0.identifier == identifier }) ?? false {

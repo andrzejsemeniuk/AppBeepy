@@ -359,20 +359,20 @@ class ViewOfSettings : GenericControllerOfSettings
                         
                         ]),
             
-            Section(header  : "MONITORED GEOGRAPHICAL REGIONS",
-                    footer  : "Swipe to delete, tap to edit, switch to activate/deactivate",
-                    cells   : [
-                        // lat/long/radius/id [map->]?
-                        // "add ..." // pushes a new controller with fields to edit (lat/long/radius/id)
-                        //  use map screen to define?
-                ]),
-            
-            Section(header  : "MONITORED BEACON REGIONS",
-                    footer  : "Swipe to delete, tap to edit, switch to activate/deactivate",
-                    cells   : [
-                        // uuid/id [map->]?
-                        // "add ..." // pushes a new controller with fields to edit (uuid/id)
-                ]),
+//            Section(header  : "MONITORED GEOGRAPHICAL REGIONS",
+//                    footer  : "Swipe to delete, tap to edit, switch to activate/deactivate",
+//                    cells   : [
+//                        // lat/long/radius/id [map->]?
+//                        // "add ..." // pushes a new controller with fields to edit (lat/long/radius/id)
+//                        //  use map screen to define?
+//                ]),
+//            
+//            Section(header  : "MONITORED BEACON REGIONS",
+//                    footer  : "Swipe to delete, tap to edit, switch to activate/deactivate",
+//                    cells   : [
+//                        // uuid/id [map->]?
+//                        // "add ..." // pushes a new controller with fields to edit (uuid/id)
+//                ]),
             
             Section(header  : "APP",
                     footer  : "",

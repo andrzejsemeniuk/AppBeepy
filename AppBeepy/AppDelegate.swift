@@ -8,13 +8,23 @@
 
 import UIKit
 
+#if DEBUG
+    let debug = true
+#endif
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     internal static var settings                            : Settings = {
         let result = Settings()
-        //        result.reset()
+        if debug {
+            result.reset()
+        }
         return result
+    }()
+    
+    internal static var model                               : Model = {
+        return BasicModel()
     }()
     
     internal static var rootViewController                  : UIViewController! {
@@ -23,7 +33,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     internal static var viewOfDashboard                     : ViewOfDashboard = {
         let result = ViewOfDashboard()
-        let model = BasicModel()
         let viewmodel = BasicViewModel()
         viewmodel.model = model
         result.model = viewmodel
@@ -39,7 +48,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }()
     
     internal static var viewOfSettingsOfiBeacon             : ViewOfSettingsOfiBeacon = {
-        return ViewOfSettingsOfiBeacon()
+        let result = ViewOfSettingsOfiBeacon()
+        let viewModel = ViewModelOfSettingsOfiBeacon()
+        viewModel.model = model
+        result.viewModel = viewModel
+        return result
     }()
     
     internal static var viewOfSettingsOfMonitoredBeacons    : ViewOfSettingsOfMonitoredBeaconRegions = {

@@ -75,20 +75,19 @@ class BasicModel : NSObject, Model {
     
     
     
-    
     func storedBeaconsAdd           (_ beacon:StoredBeacon) {
-        settings.settingStoredBeacons.value = settings.settingStoredBeacons.value.appended(with:beacon.encoded,delimiter:"%")
+        settings.settingStoredBeacons.value = settings.settingStoredBeacons.value.appended(with:beacon.encoded,delimiter:delimiterOfModelRecord)
     }
     func storedBeaconsRemove        (withUUID:String) {
-        settings.settingStoredBeacons.value = settings.settingStoredBeacons.value.split("%").filter {
-            if let uuid = $0.split("|")[safe:0], uuid == withUUID {
+        settings.settingStoredBeacons.value = settings.settingStoredBeacons.value.split(delimiterOfModelRecord).filter {
+            if let uuid = $0.split(delimiterOfModelField)[safe:0], uuid == withUUID {
                 return false
             }
             return true
-            }.joined(separator:"%")
+            }.joined(separator:delimiterOfModelRecord)
     }
     func storedBeaconsGet           () -> [StoredBeacon] {
-        return settings.settingStoredBeacons.value.split("%").map {
+        return settings.settingStoredBeacons.value.split(delimiterOfModelRecord).filter { !$0.isEmpty }.map {
             return StoredBeacon.init(fromString: $0)
         }
     }
@@ -97,18 +96,18 @@ class BasicModel : NSObject, Model {
     
     
     func storedRegionBeaconsAdd           (_ beacon:StoredRegionForBeacon) {
-        settings.settingStoredBeaconRegions.value = settings.settingStoredBeaconRegions.value.appended(with:beacon.encoded,delimiter:"%")
+        settings.settingStoredBeaconRegions.value = settings.settingStoredBeaconRegions.value.appended(with:beacon.encoded,delimiter:delimiterOfModelRecord)
     }
     func storedRegionBeaconsRemove        (withUUID:String) {
-        settings.settingStoredBeaconRegions.value = settings.settingStoredBeaconRegions.value.split("%").filter {
-            if let uuid = $0.split("|")[safe:0], uuid == withUUID {
+        settings.settingStoredBeaconRegions.value = settings.settingStoredBeaconRegions.value.split(delimiterOfModelRecord).filter {
+            if let uuid = $0.split(delimiterOfModelField)[safe:0], uuid == withUUID {
                 return false
             }
             return true
-            }.joined(separator:"%")
+            }.joined(separator:delimiterOfModelRecord)
     }
     func storedRegionBeaconsGet           () -> [StoredRegionForBeacon] {
-        return settings.settingStoredBeaconRegions.value.split("%").map {
+        return settings.settingStoredBeaconRegions.value.split(delimiterOfModelRecord).filter { !$0.isEmpty }.map {
             return StoredRegionForBeacon.init(fromString: $0)
         }
     }
@@ -118,18 +117,18 @@ class BasicModel : NSObject, Model {
     
     
     func storedRegionLocationsAdd         (_ beacon:StoredRegionForBeacon) {
-        settings.settingStoredGeoRegions.value = settings.settingStoredGeoRegions.value.appended(with:beacon.encoded,delimiter:"%")
+        settings.settingStoredGeoRegions.value = settings.settingStoredGeoRegions.value.appended(with:beacon.encoded,delimiter:delimiterOfModelRecord)
     }
     func storedRegionLocationsRemove      (withUUID:String) {
-        settings.settingStoredGeoRegions.value = settings.settingStoredGeoRegions.value.split("%").filter {
-            if let uuid = $0.split("|")[safe:0], uuid == withUUID {
+        settings.settingStoredGeoRegions.value = settings.settingStoredGeoRegions.value.split(delimiterOfModelRecord).filter {
+            if let uuid = $0.split(delimiterOfModelField)[safe:0], uuid == withUUID {
                 return false
             }
             return true
-            }.joined(separator:"%")
+            }.joined(separator:delimiterOfModelRecord)
     }
     func storedRegionLocationsGet         () -> [StoredRegionForBeacon] {
-        return settings.settingStoredGeoRegions.value.split("%").map {
+        return settings.settingStoredGeoRegions.value.split(delimiterOfModelRecord).filter { !$0.isEmpty }.map {
             return StoredRegionForBeacon.init(fromString: $0)
         }
     }

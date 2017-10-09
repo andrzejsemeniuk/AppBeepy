@@ -10,6 +10,10 @@ import Foundation
 import CoreLocation
 import ASToolkit
 
+let delimiterOfModelRecord = "\u{1}"
+let delimiterOfModelField  = "\u{2}"
+
+
 struct ModelValue {
     
     var value               : String? {
@@ -77,15 +81,15 @@ struct StoredBeacon {
     
     init() {}
     init(fromString string:String) {
-        let elements    = string.split("|")
-        self.UUID       = elements[safe:0]?.replacingOccurrences(of: "%", with: "").replacingOccurrences(of: "|", with: "") ?? "?"
+        let elements    = string.split(delimiterOfModelField)
+        self.UUID       = elements[safe:0] ?? "?"
         self.major      = UInt16(elements[safe:1] ?? "0") ?? 0
         self.minor      = UInt16(elements[safe:2] ?? "0") ?? 0
-        self.identifier = elements[safe:3]?.replacingOccurrences(of: "%", with: "").replacingOccurrences(of: "|", with: "") ?? "?"
+        self.identifier = elements[safe:3] ?? "?"
     }
     
     var encoded:String {
-        return "\(UUID)|\(major)|\(minor)|\(identifier)"
+        return "\(UUID)\(delimiterOfModelField)\(major)\(delimiterOfModelField)\(minor)\(delimiterOfModelField)\(identifier)"
     }
 }
 
@@ -95,13 +99,13 @@ struct StoredRegionForBeacon {
     
     init() {}
     init(fromString string:String) {
-        let elements    = string.split("|")
-        self.UUID       = elements[safe:0]?.replacingOccurrences(of: "%", with: "").replacingOccurrences(of: "|", with: "") ?? "?"
-        self.identifier = elements[safe:1]?.replacingOccurrences(of: "%", with: "").replacingOccurrences(of: "|", with: "") ?? "?"
+        let elements    = string.split(delimiterOfModelField)
+        self.UUID       = elements[safe:0] ?? "?"
+        self.identifier = elements[safe:1] ?? "?"
     }
     
     var encoded:String {
-        return "\(UUID)|\(identifier)"
+        return "\(UUID)\(delimiterOfModelField)\(identifier)"
     }
 }
 
@@ -113,15 +117,15 @@ struct StoredRegionForLocation {
     
     init() {}
     init(fromString string:String) {
-        let elements    = string.split("|")
+        let elements    = string.split(delimiterOfModelField)
         self.latitude   = Double(elements[safe:0] ?? "0") ?? 0
         self.longitude  = Double(elements[safe:1] ?? "0") ?? 0
         self.radius     = Double(elements[safe:2] ?? "0") ?? 0
-        self.identifier = elements[safe:1]?.replacingOccurrences(of: "%", with: "").replacingOccurrences(of: "|", with: "") ?? "?"
+        self.identifier = elements[safe:1] ?? "?"
     }
     
     var encoded:String {
-        return "\(latitude)|\(longitude)|\(radius)|\(identifier)"
+        return "\(latitude)\(delimiterOfModelField)\(longitude)\(delimiterOfModelField)\(radius)\(delimiterOfModelField)\(identifier)"
     }
 }
 
