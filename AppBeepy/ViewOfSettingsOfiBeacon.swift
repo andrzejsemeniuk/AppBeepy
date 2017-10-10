@@ -66,7 +66,7 @@ class ViewOfSettingsOfiBeacon : UITableViewController
                 return
             }
             
-            self?.navigationController?.createAlertForInput(title: "Enter a valid UUID", message: "You can paste a UUID value.  An example of a UUID is: 123e4567-e89b-12d3-a456-426655440000", value: "", ok: "OK", cancel: "Cancel") { uuid in
+            self?.navigationController?.createAlertForInput(title: "Enter a valid UUID", message: "You can paste a UUID value or use this newly generated value.", value: NSUUID().uuidString, ok: "OK", cancel: "Cancel") { uuid in
                 
                 let uuid = uuid.trimmed()
                 
