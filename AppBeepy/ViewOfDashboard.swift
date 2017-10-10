@@ -12,13 +12,17 @@ import CoreLocation
 
 class ViewOfDashboard : UIViewController {
 
-    internal var settings : Settings {
+    
+    internal var settings   : Settings {
         return AppDelegate.settings
     }
 
-    var model : ViewModel!
     
-    var table : UITableView!
+    weak var viewModel      : ViewModel!
+    
+    
+    var table               : UITableView!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,7 +51,7 @@ class ViewOfDashboard : UIViewController {
         
         self.synchronizeWithSettings()
         
-        self.model?.dirty.listener = { [weak self] value in
+        self.viewModel?.dirty.listener = { [weak self] value in
             if let value = value, value {
                 self?.table?.reloadData()
                 self?.view.setNeedsLayout()
@@ -87,7 +91,7 @@ extension ViewOfDashboard : UITableViewDelegate {
 extension ViewOfDashboard : UITableViewDataSource {
 
     func tableView                     (_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return model?.data.sections[safe:section]?.title
+        return viewModel?.data.sections[safe:section]?.title
     }
 
     func tableView                     (_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
@@ -103,11 +107,11 @@ extension ViewOfDashboard : UITableViewDataSource {
     }
 
     func numberOfSections              (in tableView: UITableView) -> Int {
-        return model?.data.sections.count ?? 0
+        return viewModel?.data.sections.count ?? 0
     }
     
     func tableView                     (_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return model?.data.sections[safe:section]?.rows.count ?? 0
+        return viewModel?.data.sections[safe:section]?.rows.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -120,7 +124,7 @@ extension ViewOfDashboard : UITableViewDataSource {
         result.layoutMargins = .zero
         
         
-        if let row = model.data.sections[safe:indexPath.section]?.rows[safe:indexPath.row] {
+        if let row = viewModel?.data.sections[safe:indexPath.section]?.rows[safe:indexPath.row] {
         
             let value = UILabel()
             result.accessoryView = value

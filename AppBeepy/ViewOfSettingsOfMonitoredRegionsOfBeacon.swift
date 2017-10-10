@@ -1,5 +1,5 @@
 //
-//  ViewOfSettingsOfMonitoredGeoRegions.swift
+//  ViewOfSettingsOfMonitoredRegionsOfBeacon.swift
 //  AppBeepy
 //
 //  Created by andrzej semeniuk on 10/4/17.
@@ -10,16 +10,19 @@ import Foundation
 import UIKit
 import ASToolkit
 
-class ViewOfSettingsOfMonitoredGeoRegions : GenericControllerOfSettings
+class ViewOfSettingsOfMonitoredRegionsOfBeacon : GenericControllerOfSettings
 {
     
     
     
-    private var settings : Settings {
+    var settings : Settings {
         return AppDelegate.settings
     }
     
     
+    
+    weak var viewModel : ViewModel!
+
     
     
     override func viewDidLoad()
@@ -34,7 +37,7 @@ class ViewOfSettingsOfMonitoredGeoRegions : GenericControllerOfSettings
         
         tableView.showsVerticalScrollIndicator = false
         
-        super.title = "Monitored Regions"
+        super.title = "Monitored Beacons"
         
         self.synchronizeWithSettings()
     }

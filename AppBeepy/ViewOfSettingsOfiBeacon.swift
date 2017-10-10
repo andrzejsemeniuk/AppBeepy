@@ -10,23 +10,18 @@ import Foundation
 import UIKit
 import ASToolkit
 
-class ViewModelOfSettingsOfiBeacon : NSObject {
-    
-    var model : Model!
-    
-}
-
 class ViewOfSettingsOfiBeacon : UITableViewController
 {
     
     
     
-    private var settings : Settings {
+    var settings : Settings {
         return AppDelegate.settings
     }
     
     
-    var viewModel : ViewModelOfSettingsOfiBeacon!
+    weak var viewModel : ViewModel!
+    
     
     
     override func viewDidLoad()
@@ -46,6 +41,7 @@ class ViewOfSettingsOfiBeacon : UITableViewController
         let buttonForSettings = UIBarButtonItem.init(barButtonSystemItem:.add, target: self, action: #selector(ViewOfSettingsOfiBeacon.tapOnButtonForAdd(_:)))
         
         self.navigationItem.rightBarButtonItem = buttonForSettings
+        
     }
     
     
@@ -59,38 +55,54 @@ class ViewOfSettingsOfiBeacon : UITableViewController
     
     
     @objc func tapOnButtonForAdd(_ item:UIBarButtonItem) {
-        if debug {
-            print("beacons string: \(settings.settingStoredBeacons.value)")
-            print(self.viewModel.model.storedBeaconsGet())
-        }
-        self.navigationController?.createAlertForInput(title: "Enter Identifier", message: "Identifier is a unique name", value: "", ok: "OK", cancel: "Cancel") { [weak self] identifier in
+        
+        self.navigationController?.createAlertForInput(title: "Enter Identifier", message: "Identifier must be a unique name", value: "", ok: "OK", cancel: "Cancel") { [weak self] identifier in
             
-            if self?.viewModel?.model?.storedBeaconsGet().contains(where: { $0.identifier == identifier }) ?? false {
+            if self?.viewModel?.storedBeaconsGet().contains(where: { $0.identifier == identifier }) ?? false {
                 self?.navigationController?.createAlertForAnswer(title: "Duplicate identifier", message: "This identifier \'\(identifier)\' already exists", ok: "OK") {
                     // do nothing
                 }
+                return
             }
-            else {
-                self?.navigationController?.createAlertForInput(title: "Enter UUID", message: "UUID", value: "", ok: "OK", cancel: "Cancel") { uuid in
+            
+            self?.navigationController?.createAlertForInput(title: "Enter a valid UUID", message: "You can paste a UUID value.  An example of a UUID is: 123e4567-e89b-12d3-a456-426655440000", value: "", ok: "OK", cancel: "Cancel") { uuid in
+                
+                if uuid.count != 36 || uuid.split("-").count != 5 {
+                    self?.navigationController?.createAlertForAnswer(title: "Invalid UUID", message: "This entry \'\(uuid)\' is invalid", ok: "OK") {
+                        // do nothing
+                    }
+                    return
+                }
+                
+                self?.navigationController?.createAlertForInput(title: "Enter the Major value", message: "Major is an integer between 0 and 65535", value: "0", ok: "OK", cancel: "Cancel") { MAJOR in
                     
-                    self?.navigationController?.createAlertForInput(title: "Enter Major", message: "Major is an integer between 0 and 65535", value: "", ok: "OK", cancel: "Cancel") { major in
-                        
-                        let major = UInt16(major) ?? 0
-                        
-                        self?.navigationController?.createAlertForInput(title: "Enter Minor", message: "Major is an integer between 0 and 65535", value: "", ok: "OK", cancel: "Cancel") { minor in
-                            
-                            let minor = UInt16(minor) ?? 0
-                            
-                            var beacon = StoredBeacon()
-
-                            beacon.UUID = uuid
-                            beacon.major = major
-                            beacon.minor = minor
-                            beacon.identifier = identifier
-                            
-                            self?.viewModel?.model?.storedBeaconsAdd(beacon)
-                            
+                    guard let major = UInt16(MAJOR) else {
+                        self?.navigationController?.createAlertForAnswer(title: "Invalid Major", message: "This entry \'\(MAJOR)\' is invalid", ok: "OK") {
+                            // do nothing
                         }
+                        return
+                    }
+                    
+                    self?.navigationController?.createAlertForInput(title: "Enter the Minor value", message: "Minor is an integer between 0 and 65535", value: "0", ok: "OK", cancel: "Cancel") { MINOR in
+                        
+                        guard let minor = UInt16(MINOR) else {
+                            self?.navigationController?.createAlertForAnswer(title: "Invalid Minor", message: "This entry \'\(MINOR)\' is invalid", ok: "OK") {
+                                // do nothing
+                            }
+                            return
+                        }
+                        
+                        var beacon = StoredBeacon()
+                        
+                        beacon.UUID = uuid
+                        beacon.major = major
+                        beacon.minor = minor
+                        beacon.identifier = identifier
+                        
+                        // TODO: REPLACE EXISTING WITH DUPLICATE?
+                        self?.viewModel?.storedBeaconsAdd(beacon)
+                        
+                        self?.tableView.reloadData()
                     }
                 }
             }
@@ -101,32 +113,51 @@ class ViewOfSettingsOfiBeacon : UITableViewController
     
     
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    override func numberOfSections              (in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel?.model?.storedBeaconsGet().count ?? 0
+    override func tableView                     (_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel?.storedBeaconsGet().count ?? 0
     }
     
     override func tableView                     (_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let cell = UITableViewCell()
         
-        let text = viewModel?.model?.storedBeaconsGet()[safe:indexPath.row]?.identifier ?? "?"
+        let text = viewModel?.storedBeaconsGet()[safe:indexPath.row]?.identifier ?? "?"
         
         cell.textLabel?.attributedText = text | UIColor.lightGray
         
         return cell
     }
     
+    
+    
     override func viewWillAppear                (_ animated: Bool)
     {
-        tableView.backgroundColor   = settings.settingColorBackgroundSettings.value
+        tableView.backgroundColor = settings.settingColorBackgroundSettings.value
         
         super.viewWillAppear(animated)
     }
     
     
+}
+
+extension ViewOfSettingsOfiBeacon {
+    
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .delete
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        guard
+            editingStyle == .delete,
+            let row = viewModel.storedBeaconsGet()[safe:indexPath.row] else {
+                return
+        }
+        viewModel.storedBeaconsRemove(withIdentifier: row.identifier)
+        self.tableView.reloadData()
+    }
 }
 

@@ -8,7 +8,7 @@
 
 import XCTest
 
-class TestsForViewModel: XCTestCase {
+class TestsForBasicViewModel: XCTestCase {
     
     override func setUp() {
         super.setUp()
@@ -19,30 +19,7 @@ class TestsForViewModel: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-    
-    func testLocationManagerSetup() {
-    }
-    
-    func testBeaconSetup() {
         
-    }
-    
-    func testBeaconTransmission() {
-        
-    }
-    
-    func testBeaconReception() {
-        
-    }
-    
-    func testLocationAwareness() {
-        
-    }
-    
-    func testLocationUpdates() {
-        
-    }
-    
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measure {

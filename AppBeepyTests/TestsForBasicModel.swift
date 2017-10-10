@@ -1,5 +1,5 @@
 //
-//  TestsForViewModel.swift
+//  TestsForModel.swift
 //  AppBeepyTests
 //
 //  Created by andrzej semeniuk on 10/3/17.
@@ -8,7 +8,7 @@
 
 import XCTest
 
-class TestsForViewModel: XCTestCase {
+class TestsForBasicModel: XCTestCase {
     
     override func setUp() {
         super.setUp()
@@ -20,27 +20,9 @@ class TestsForViewModel: XCTestCase {
         super.tearDown()
     }
     
-    func testLocationManagerSetup() {
-    }
-    
-    func testBeaconSetup() {
-        
-    }
-    
-    func testBeaconTransmission() {
-        
-    }
-    
-    func testBeaconReception() {
-        
-    }
-    
-    func testLocationAwareness() {
-        
-    }
-    
-    func testLocationUpdates() {
-        
+    func testExample() {
+        // This is an example of a functional test case.
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
     
     func testPerformanceExample() {

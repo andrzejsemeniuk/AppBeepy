@@ -164,17 +164,17 @@ protocol Model : class {
 
     
     func storedBeaconsAdd                               (_ beacon:StoredBeacon)
-    func storedBeaconsRemove                            (withUUID:String)
+    func storedBeaconsRemove                            (withIdentifier:String)
     func storedBeaconsGet                               () -> [StoredBeacon]
     
     
     func storedRegionBeaconsAdd                         (_ beacon:StoredRegionForBeacon)
-    func storedRegionBeaconsRemove                      (withUUID:String)
+    func storedRegionBeaconsRemove                      (withIdentifier:String)
     func storedRegionBeaconsGet                         () -> [StoredRegionForBeacon]
     
     
-    func storedRegionLocationsAdd                       (_ beacon:StoredRegionForBeacon)
-    func storedRegionLocationsRemove                    (withUUID:String)
-    func storedRegionLocationsGet                       () -> [StoredRegionForBeacon]
+    func storedRegionLocationsAdd                       (_ beacon:StoredRegionForLocation)
+    func storedRegionLocationsRemove                    (withIdentifier:String)
+    func storedRegionLocationsGet                       () -> [StoredRegionForLocation]
 
 }

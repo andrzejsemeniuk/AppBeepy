@@ -12,61 +12,15 @@ import ASToolkit
 
 class BasicViewModel : ViewModel {
     
-    internal var settings : Settings {
+    internal var settings   : Settings {
         return AppDelegate.settings
     }
     
-    var model           : Model! {
-        didSet {
-            guard let model = model else { return }
-            
-            let listener : (ModelValue?)->() = { [weak self] value in
-                self?.dirty.value = true
-            }
-            
-            model.valueLocationCoordinateLatitude       .listener = listener
-            model.valueLocationCoordinateLongitude      .listener = listener
-            model.valueLocationAltitude                 .listener = listener
-            model.valueLocationFloor                    .listener = listener
-            model.valueLocationSpeed                    .listener = listener
-            model.valueLocationCourse                   .listener = listener
-            model.valueLocationPlacemark                .listener = listener
-            model.valueLocationTimestamp                .listener = listener
-            model.valueLocationAccuracyVertical         .listener = listener
-            model.valueLocationAccuracyHorizontal       .listener = listener
-
-            model.valueHeadingMagnetic                  .listener = listener
-            model.valueHeadingTrue                      .listener = listener
-            model.valueHeadingAccuracy                  .listener = listener
-            model.valueHeadingTimestamp                 .listener = listener
-            model.valueHeadingX                         .listener = listener
-            model.valueHeadingY                         .listener = listener
-            model.valueHeadingZ                         .listener = listener
-
-            model.valueBeaconUUID                       .listener = listener
-            model.valueBeaconMajor                      .listener = listener
-            model.valueBeaconMinor                      .listener = listener
-            model.valueBeaconIdentifier                 .listener = listener
-
-            model.valueBeaconsRanged                    .listener = { [weak self] value in
-                self?.dirty.value = true
-            }
-
-            model.valueRegionsRanged                    .listener = { [weak self] value in
-                self?.dirty.value = true
-            }
-            
-            model.valueRegionsMonitored                 .listener = { [weak self] value in
-                self?.dirty.value = true
-            }
-            
-            build()
-        }
-    }
+    fileprivate weak var model  : Model!
     
-    let dirty           = BindingValue<Bool>(false)
+    let dirty               = BindingValue<Bool>(true)
     
-    var data            : ViewModelData {
+    var data                : ViewModelData {
         get {
             if let flag = dirty.value, flag {
                 build()
@@ -76,7 +30,54 @@ class BasicViewModel : ViewModel {
         }
     }
 
-    private var _data   = ViewModelData()
+    private var _data       = ViewModelData()
+    
+    init(model:Model) {
+        
+        self.model = model
+        
+        let listener : (ModelValue?)->() = { [weak self] value in
+            self?.dirty.value = true
+        }
+        
+        model.valueLocationCoordinateLatitude       .listener = listener
+        model.valueLocationCoordinateLongitude      .listener = listener
+        model.valueLocationAltitude                 .listener = listener
+        model.valueLocationFloor                    .listener = listener
+        model.valueLocationSpeed                    .listener = listener
+        model.valueLocationCourse                   .listener = listener
+        model.valueLocationPlacemark                .listener = listener
+        model.valueLocationTimestamp                .listener = listener
+        model.valueLocationAccuracyVertical         .listener = listener
+        model.valueLocationAccuracyHorizontal       .listener = listener
+        
+        model.valueHeadingMagnetic                  .listener = listener
+        model.valueHeadingTrue                      .listener = listener
+        model.valueHeadingAccuracy                  .listener = listener
+        model.valueHeadingTimestamp                 .listener = listener
+        model.valueHeadingX                         .listener = listener
+        model.valueHeadingY                         .listener = listener
+        model.valueHeadingZ                         .listener = listener
+        
+        model.valueBeaconUUID                       .listener = listener
+        model.valueBeaconMajor                      .listener = listener
+        model.valueBeaconMinor                      .listener = listener
+        model.valueBeaconIdentifier                 .listener = listener
+        
+        model.valueBeaconsRanged                    .listener = { [weak self] value in
+            self?.dirty.value = true
+        }
+        
+        model.valueRegionsRanged                    .listener = { [weak self] value in
+            self?.dirty.value = true
+        }
+        
+        model.valueRegionsMonitored                 .listener = { [weak self] value in
+            self?.dirty.value = true
+        }
+        
+        build()
+    }
     
     private func build() {
         
@@ -181,4 +182,20 @@ class BasicViewModel : ViewModel {
         self.dirty.value = false
     }
     
+}
+
+extension BasicViewModel {
+    
+    func storedBeaconsAdd                               (_ beacon:StoredBeacon)             { model.storedBeaconsAdd(beacon) }
+    func storedBeaconsRemove                            (withIdentifier:String)             { model.storedBeaconsRemove(withIdentifier: withIdentifier) }
+    func storedBeaconsGet                               () -> [StoredBeacon]                { return model.storedBeaconsGet() }
+    
+    func storedRegionBeaconsAdd                         (_ beacon:StoredRegionForBeacon)    { model.storedRegionBeaconsAdd(beacon) }
+    func storedRegionBeaconsRemove                      (withIdentifier:String)             { model.storedRegionBeaconsRemove(withIdentifier: withIdentifier) }
+    func storedRegionBeaconsGet                         () -> [StoredRegionForBeacon]       { return model.storedRegionBeaconsGet() }
+    
+    func storedRegionLocationsAdd                       (_ beacon:StoredRegionForLocation)  { model.storedRegionLocationsAdd(beacon) }
+    func storedRegionLocationsRemove                    (withIdentifier:String)             { model.storedRegionLocationsRemove(withIdentifier: withIdentifier) }
+    func storedRegionLocationsGet                       () -> [StoredRegionForLocation]     { return model.storedRegionLocationsGet() }
+
 }

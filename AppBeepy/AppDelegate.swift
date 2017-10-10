@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     internal static var settings                            : Settings = {
         let result = Settings()
         if debug {
-            result.reset()
+//            result.reset()
         }
         return result
     }()
@@ -27,15 +27,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return BasicModel()
     }()
     
+    internal static var viewModel                           : ViewModel = {
+        return BasicViewModel(model:model)
+    }()
+    
     internal static var rootViewController                  : UIViewController! {
         return UIApplication.rootViewController
     }
     
     internal static var viewOfDashboard                     : ViewOfDashboard = {
         let result = ViewOfDashboard()
-        let viewmodel = BasicViewModel()
-        viewmodel.model = model
-        result.model = viewmodel
+        result.viewModel = viewModel
         return result
     }()
     
@@ -49,18 +51,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     internal static var viewOfSettingsOfiBeacon             : ViewOfSettingsOfiBeacon = {
         let result = ViewOfSettingsOfiBeacon()
-        let viewModel = ViewModelOfSettingsOfiBeacon()
-        viewModel.model = model
         result.viewModel = viewModel
         return result
     }()
     
-    internal static var viewOfSettingsOfMonitoredBeacons    : ViewOfSettingsOfMonitoredBeaconRegions = {
-        return ViewOfSettingsOfMonitoredBeaconRegions()
+    internal static var viewOfSettingsOfMonitoredBeacons    : ViewOfSettingsOfMonitoredRegionsOfBeacon = {
+        let result = ViewOfSettingsOfMonitoredRegionsOfBeacon()
+        result.viewModel = viewModel
+        return result
     }()
     
-    internal static var viewOfSettingsOfMonitoredLocations  : ViewOfSettingsOfMonitoredGeoRegions = {
-        return ViewOfSettingsOfMonitoredGeoRegions()
+    internal static var viewOfSettingsOfMonitoredLocations  : ViewOfSettingsOfMonitoredRegionsOfLocation = {
+        let result = ViewOfSettingsOfMonitoredRegionsOfLocation()
+        result.viewModel = viewModel
+        return result
     }()
     
 

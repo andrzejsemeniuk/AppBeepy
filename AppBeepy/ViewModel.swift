@@ -30,12 +30,26 @@ struct ViewModelRow {
     }
 }
 
-protocol ViewModel {
+protocol ViewModel : class {
     
     var dirty               : BindingValue<Bool> { get }
     
     var data                : ViewModelData { get }
     
+    func storedBeaconsAdd                               (_ beacon:StoredBeacon)
+    func storedBeaconsRemove                            (withIdentifier:String)
+    func storedBeaconsGet                               () -> [StoredBeacon]
+    
+    
+    func storedRegionBeaconsAdd                         (_ beacon:StoredRegionForBeacon)
+    func storedRegionBeaconsRemove                      (withIdentifier:String)
+    func storedRegionBeaconsGet                         () -> [StoredRegionForBeacon]
+    
+    
+    func storedRegionLocationsAdd                       (_ beacon:StoredRegionForLocation)
+    func storedRegionLocationsRemove                    (withIdentifier:String)
+    func storedRegionLocationsGet                       () -> [StoredRegionForLocation]
+
 }
 
 

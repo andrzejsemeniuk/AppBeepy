@@ -78,12 +78,9 @@ class BasicModel : NSObject, Model {
     func storedBeaconsAdd           (_ beacon:StoredBeacon) {
         settings.settingStoredBeacons.value = settings.settingStoredBeacons.value.appended(with:beacon.encoded,delimiter:delimiterOfModelRecord)
     }
-    func storedBeaconsRemove        (withUUID:String) {
+    func storedBeaconsRemove        (withIdentifier identifier:String) {
         settings.settingStoredBeacons.value = settings.settingStoredBeacons.value.split(delimiterOfModelRecord).filter {
-            if let uuid = $0.split(delimiterOfModelField)[safe:0], uuid == withUUID {
-                return false
-            }
-            return true
+            return StoredBeacon(fromString:$0).identifier != identifier
             }.joined(separator:delimiterOfModelRecord)
     }
     func storedBeaconsGet           () -> [StoredBeacon] {
@@ -96,18 +93,15 @@ class BasicModel : NSObject, Model {
     
     
     func storedRegionBeaconsAdd           (_ beacon:StoredRegionForBeacon) {
-        settings.settingStoredBeaconRegions.value = settings.settingStoredBeaconRegions.value.appended(with:beacon.encoded,delimiter:delimiterOfModelRecord)
+        settings.settingStoredRegionsOfBeacon.value = settings.settingStoredRegionsOfBeacon.value.appended(with:beacon.encoded,delimiter:delimiterOfModelRecord)
     }
-    func storedRegionBeaconsRemove        (withUUID:String) {
-        settings.settingStoredBeaconRegions.value = settings.settingStoredBeaconRegions.value.split(delimiterOfModelRecord).filter {
-            if let uuid = $0.split(delimiterOfModelField)[safe:0], uuid == withUUID {
-                return false
-            }
-            return true
+    func storedRegionBeaconsRemove        (withIdentifier identifier:String) {
+        settings.settingStoredRegionsOfBeacon.value = settings.settingStoredRegionsOfBeacon.value.split(delimiterOfModelRecord).filter {
+            return StoredRegionForBeacon(fromString:$0).identifier != identifier
             }.joined(separator:delimiterOfModelRecord)
     }
     func storedRegionBeaconsGet           () -> [StoredRegionForBeacon] {
-        return settings.settingStoredBeaconRegions.value.split(delimiterOfModelRecord).filter { !$0.isEmpty }.map {
+        return settings.settingStoredRegionsOfBeacon.value.split(delimiterOfModelRecord).filter { !$0.isEmpty }.map {
             return StoredRegionForBeacon.init(fromString: $0)
         }
     }
@@ -116,20 +110,17 @@ class BasicModel : NSObject, Model {
 
     
     
-    func storedRegionLocationsAdd         (_ beacon:StoredRegionForBeacon) {
-        settings.settingStoredGeoRegions.value = settings.settingStoredGeoRegions.value.appended(with:beacon.encoded,delimiter:delimiterOfModelRecord)
+    func storedRegionLocationsAdd         (_ beacon:StoredRegionForLocation) {
+        settings.settingStoredRegionsOfLocation.value = settings.settingStoredRegionsOfLocation.value.appended(with:beacon.encoded,delimiter:delimiterOfModelRecord)
     }
-    func storedRegionLocationsRemove      (withUUID:String) {
-        settings.settingStoredGeoRegions.value = settings.settingStoredGeoRegions.value.split(delimiterOfModelRecord).filter {
-            if let uuid = $0.split(delimiterOfModelField)[safe:0], uuid == withUUID {
-                return false
-            }
-            return true
+    func storedRegionLocationsRemove      (withIdentifier identifier:String) {
+        settings.settingStoredRegionsOfLocation.value = settings.settingStoredRegionsOfLocation.value.split(delimiterOfModelRecord).filter {
+            return StoredRegionForLocation(fromString:$0).identifier != identifier
             }.joined(separator:delimiterOfModelRecord)
     }
-    func storedRegionLocationsGet         () -> [StoredRegionForBeacon] {
-        return settings.settingStoredGeoRegions.value.split(delimiterOfModelRecord).filter { !$0.isEmpty }.map {
-            return StoredRegionForBeacon.init(fromString: $0)
+    func storedRegionLocationsGet         () -> [StoredRegionForLocation] {
+        return settings.settingStoredRegionsOfLocation.value.split(delimiterOfModelRecord).filter { !$0.isEmpty }.map {
+            return StoredRegionForLocation.init(fromString: $0)
         }
     }
     
