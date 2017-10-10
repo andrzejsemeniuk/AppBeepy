@@ -75,8 +75,8 @@ struct ModelValueBeacon {
 
 struct StoredBeacon {
     var UUID        : String = ""
-    var major       : UInt16 = 0
-    var minor       : UInt16 = 0
+    var major       : CLBeaconMajorValue = 0
+    var minor       : CLBeaconMinorValue = 0
     var identifier  : String = ""
     
     init() {}

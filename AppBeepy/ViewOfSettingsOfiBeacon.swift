@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import ASToolkit
+import CoreLocation
 
 class ViewOfSettingsOfiBeacon : UITableViewController
 {
@@ -67,7 +68,9 @@ class ViewOfSettingsOfiBeacon : UITableViewController
             
             self?.navigationController?.createAlertForInput(title: "Enter a valid UUID", message: "You can paste a UUID value.  An example of a UUID is: 123e4567-e89b-12d3-a456-426655440000", value: "", ok: "OK", cancel: "Cancel") { uuid in
                 
-                if uuid.count != 36 || uuid.split("-").count != 5 {
+                let uuid = uuid.trimmed()
+                
+                guard let _ = UUID.init(uuidString: uuid) else {
                     self?.navigationController?.createAlertForAnswer(title: "Invalid UUID", message: "This entry \'\(uuid)\' is invalid", ok: "OK") {
                         // do nothing
                     }
@@ -76,7 +79,7 @@ class ViewOfSettingsOfiBeacon : UITableViewController
                 
                 self?.navigationController?.createAlertForInput(title: "Enter the Major value", message: "Major is an integer between 0 and 65535", value: "0", ok: "OK", cancel: "Cancel") { MAJOR in
                     
-                    guard let major = UInt16(MAJOR) else {
+                    guard let major = CLBeaconMajorValue(MAJOR) else {
                         self?.navigationController?.createAlertForAnswer(title: "Invalid Major", message: "This entry \'\(MAJOR)\' is invalid", ok: "OK") {
                             // do nothing
                         }
@@ -85,7 +88,7 @@ class ViewOfSettingsOfiBeacon : UITableViewController
                     
                     self?.navigationController?.createAlertForInput(title: "Enter the Minor value", message: "Minor is an integer between 0 and 65535", value: "0", ok: "OK", cancel: "Cancel") { MINOR in
                         
-                        guard let minor = UInt16(MINOR) else {
+                        guard let minor = CLBeaconMinorValue(MINOR) else {
                             self?.navigationController?.createAlertForAnswer(title: "Invalid Minor", message: "This entry \'\(MINOR)\' is invalid", ok: "OK") {
                                 // do nothing
                             }

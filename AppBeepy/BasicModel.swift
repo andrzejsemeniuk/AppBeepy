@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreLocation
+import CoreBluetooth
 import ASToolkit
 
 
@@ -56,7 +57,7 @@ class BasicModel : NSObject, Model {
         self.locationManager = CLLocationManager()
         self.locationManager.delegate = self
         
-        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestAlwaysAuthorization()
     }
     
     fileprivate func update(_ value:BindingValue<ModelValue>!, withString:String) {
@@ -88,7 +89,48 @@ class BasicModel : NSObject, Model {
             return StoredBeacon.init(fromString: $0)
         }
     }
-    
+    func monitoringStart    (on beacon:StoredBeacon) -> Bool {
+        if let uuid = UUID(uuidString: beacon.UUID) {
+            let region = CLBeaconRegion(proximityUUID   : uuid,
+                                        major           : beacon.major,
+                                        minor           : beacon.minor,
+                                        identifier      : beacon.identifier)
+            
+            self.locationManager?.startMonitoring(for: region)
+            self.locationManager?.startRangingBeacons(in: region)
+            return true
+        }
+        return false
+    }
+    func monitoringStop     (on beacon:StoredBeacon) -> Bool {
+        if let uuid = UUID(uuidString: beacon.UUID) {
+            let region = CLBeaconRegion(proximityUUID   : uuid,
+                                        major           : beacon.major,
+                                        minor           : beacon.minor,
+                                        identifier      : beacon.identifier)
+            
+            self.locationManager?.stopMonitoring(for: region)
+            self.locationManager?.stopRangingBeacons(in: region)
+            return true
+        }
+        return false
+    }
+    func storedBeaconsMonitoringStart   () {
+        self.storedBeaconsGet().forEach {
+            _ = monitoringStart(on: $0)
+        }
+    }
+    func storedBeaconsMonitoringStop   () {
+        self.storedBeaconsGet().forEach {
+            _ = monitoringStop(on: $0)
+        }
+    }
+    func advertiseDevice(region : CLBeaconRegion) {
+        let peripheral = CBPeripheralManager(delegate: self, queue: nil)
+        let peripheralData = region.peripheralData(withMeasuredPower: nil)
+        
+        peripheral.startAdvertising(((peripheralData as NSDictionary) as! [String : Any]))
+    }
     
     
     
@@ -105,7 +147,39 @@ class BasicModel : NSObject, Model {
             return StoredRegionForBeacon.init(fromString: $0)
         }
     }
-    
+    func monitoringStart                  (on beacon:StoredRegionForBeacon) -> Bool {
+        if let uuid = UUID(uuidString: beacon.UUID) {
+            let region = CLBeaconRegion(proximityUUID   : uuid,
+                                        identifier      : beacon.identifier)
+            
+            self.locationManager?.startMonitoring(for: region)
+            self.locationManager?.startRangingBeacons(in: region)
+            return true
+        }
+        return false
+    }
+    func monitoringStop                   (on beacon:StoredRegionForBeacon) -> Bool {
+        if let uuid = UUID(uuidString: beacon.UUID) {
+            let region = CLBeaconRegion(proximityUUID   : uuid,
+                                        identifier      : beacon.identifier)
+            
+            self.locationManager?.stopMonitoring(for: region)
+            self.locationManager?.stopRangingBeacons(in: region)
+            return true
+        }
+        return false
+    }
+    func storedRegionBeaconsMonitoringStart   () {
+        self.storedRegionBeaconsGet().forEach {
+            _ = monitoringStart(on: $0)
+        }
+    }
+    func storedRegionBeaconsMonitoringStop   () {
+        self.storedRegionBeaconsGet().forEach {
+            _ = monitoringStop(on: $0)
+        }
+    }
+
 
 
     
@@ -123,6 +197,31 @@ class BasicModel : NSObject, Model {
             return StoredRegionForLocation.init(fromString: $0)
         }
     }
+    func monitoringStart                  (on region:StoredRegionForLocation) -> Bool {
+        let region = CLCircularRegion(center    : CLLocationCoordinate2D.init(latitude: region.latitude, longitude: region.longitude),
+                                      radius    : region.radius,
+                                      identifier: region.identifier)
+        self.locationManager?.startMonitoring(for: region)
+        return true
+    }
+    func monitoringStop                   (on region:StoredRegionForLocation) -> Bool {
+        let region = CLCircularRegion(center    : CLLocationCoordinate2D.init(latitude: region.latitude, longitude: region.longitude),
+                                      radius    : region.radius,
+                                      identifier: region.identifier)
+        self.locationManager?.stopMonitoring(for: region)
+        return true
+    }
+    func storedRegionLocationsMonitoringStart   () {
+        self.storedRegionLocationsGet().forEach {
+            _ = monitoringStart(on: $0)
+        }
+    }
+    func storedRegionLocationsMonitoringStop   () {
+        self.storedRegionLocationsGet().forEach {
+            _ = monitoringStop(on: $0)
+        }
+    }
+
     
     
     
@@ -265,3 +364,25 @@ extension BasicModel : CLLocationManagerDelegate {
     }
 }
 
+extension BasicModel : CBPeripheralManagerDelegate {
+    func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
+        switch peripheral.state {
+        case .poweredOff:
+            fallthrough
+        case .poweredOn:
+            fallthrough
+        case .resetting:
+            fallthrough
+        case .unauthorized:
+            fallthrough
+        case .unknown:
+            fallthrough
+        case .unsupported:
+            fallthrough
+        default:
+            print("peripheral state:\(peripheral.state)")
+        }
+    }
+    
+    
+}
