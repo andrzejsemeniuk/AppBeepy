@@ -68,8 +68,8 @@ struct ModelValueBeacon {
     let proximityUUID       : String
     let proximity           : CLProximity
     let accuracy            : Double
-    let major               : UInt16
-    let minor               : UInt16
+    let major               : CLBeaconMajorValue
+    let minor               : CLBeaconMinorValue
     let rssi                : Int
 }
 
@@ -83,8 +83,8 @@ struct StoredBeacon {
     init(fromString string:String) {
         let elements    = string.split(delimiterOfModelField)
         self.UUID       = elements[safe:0] ?? "?"
-        self.major      = UInt16(elements[safe:1] ?? "0") ?? 0
-        self.minor      = UInt16(elements[safe:2] ?? "0") ?? 0
+        self.major      = CLBeaconMajorValue(elements[safe:1] ?? "0") ?? 0
+        self.minor      = CLBeaconMinorValue(elements[safe:2] ?? "0") ?? 0
         self.identifier = elements[safe:3] ?? "?"
     }
     

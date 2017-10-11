@@ -78,10 +78,16 @@ class BasicModel : NSObject, Model {
     
     func storedBeaconsAdd           (_ beacon:StoredBeacon) {
         settings.settingStoredBeacons.value = settings.settingStoredBeacons.value.appended(with:beacon.encoded,delimiter:delimiterOfModelRecord)
+        self.monitoringStart(on: beacon)
     }
     func storedBeaconsRemove        (withIdentifier identifier:String) {
-        settings.settingStoredBeacons.value = settings.settingStoredBeacons.value.split(delimiterOfModelRecord).filter {
-            return StoredBeacon(fromString:$0).identifier != identifier
+        settings.settingStoredBeacons.value = settings.settingStoredBeacons.value.split(delimiterOfModelRecord).filter { [weak self] in
+            let stored = StoredBeacon(fromString:$0)
+            if stored.identifier == identifier {
+                self?.monitoringStop(on: stored)
+                return false
+            }
+            return true
             }.joined(separator:delimiterOfModelRecord)
     }
     func storedBeaconsGet           () -> [StoredBeacon] {
@@ -98,6 +104,7 @@ class BasicModel : NSObject, Model {
             
             self.locationManager?.startMonitoring(for: region)
             self.locationManager?.startRangingBeacons(in: region)
+            self.advertiseDevice(region: region)
             return true
         }
         return false
@@ -136,10 +143,16 @@ class BasicModel : NSObject, Model {
     
     func storedRegionBeaconsAdd           (_ beacon:StoredRegionForBeacon) {
         settings.settingStoredRegionsOfBeacon.value = settings.settingStoredRegionsOfBeacon.value.appended(with:beacon.encoded,delimiter:delimiterOfModelRecord)
+        self.monitoringStart(on: beacon)
     }
     func storedRegionBeaconsRemove        (withIdentifier identifier:String) {
-        settings.settingStoredRegionsOfBeacon.value = settings.settingStoredRegionsOfBeacon.value.split(delimiterOfModelRecord).filter {
-            return StoredRegionForBeacon(fromString:$0).identifier != identifier
+        settings.settingStoredRegionsOfBeacon.value = settings.settingStoredRegionsOfBeacon.value.split(delimiterOfModelRecord).filter { [weak self] in
+            let stored = StoredRegionForBeacon(fromString:$0)
+            if stored.identifier == identifier {
+                self?.monitoringStop(on: stored)
+                return false
+            }
+            return true
             }.joined(separator:delimiterOfModelRecord)
     }
     func storedRegionBeaconsGet           () -> [StoredRegionForBeacon] {
@@ -179,17 +192,23 @@ class BasicModel : NSObject, Model {
             _ = monitoringStop(on: $0)
         }
     }
-
-
-
+    
+    
+    
     
     
     func storedRegionLocationsAdd         (_ beacon:StoredRegionForLocation) {
         settings.settingStoredRegionsOfLocation.value = settings.settingStoredRegionsOfLocation.value.appended(with:beacon.encoded,delimiter:delimiterOfModelRecord)
+        self.monitoringStart(on: beacon)
     }
     func storedRegionLocationsRemove      (withIdentifier identifier:String) {
-        settings.settingStoredRegionsOfLocation.value = settings.settingStoredRegionsOfLocation.value.split(delimiterOfModelRecord).filter {
-            return StoredRegionForLocation(fromString:$0).identifier != identifier
+        settings.settingStoredRegionsOfLocation.value = settings.settingStoredRegionsOfLocation.value.split(delimiterOfModelRecord).filter { [weak self] in
+            let stored = StoredRegionForLocation(fromString:$0)
+            if stored.identifier == identifier {
+                self?.monitoringStop(on: stored)
+                return false
+            }
+            return true
             }.joined(separator:delimiterOfModelRecord)
     }
     func storedRegionLocationsGet         () -> [StoredRegionForLocation] {
@@ -221,7 +240,7 @@ class BasicModel : NSObject, Model {
             _ = monitoringStop(on: $0)
         }
     }
-
+    
     
     
     
@@ -313,6 +332,10 @@ extension BasicModel : CLLocationManagerDelegate {
             manager.startMonitoringVisits()
             manager.pausesLocationUpdatesAutomatically=false
             manager.disallowDeferredLocationUpdates()
+            
+            self.storedBeaconsMonitoringStart()
+            self.storedRegionBeaconsMonitoringStart()
+            self.storedRegionLocationsMonitoringStart()
         }
         
         self.update.fire()
@@ -327,19 +350,21 @@ extension BasicModel : CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didRangeBeacons beacons: [CLBeacon], in region: CLBeaconRegion) {
-        let filtered = valueBeaconsRanged.value?.filter {
-            return $0.regionIdentifier != region.identifier
-            } ?? []
-        valueBeaconsRanged.value = filtered + beacons.map {
-            ModelValueBeacon(regionIdentifier    : region.identifier,
-                             proximityUUID       : $0.proximityUUID.uuidString,
-                             proximity           : $0.proximity,
-                             accuracy            : $0.accuracy,
-                             major               : UInt16($0.major),
-                             minor               : UInt16($0.minor),
-                             rssi                : $0.rssi)
+        if beacons.isNotEmpty {
+            let filtered = valueBeaconsRanged.value?.filter {
+                return $0.regionIdentifier != region.identifier
+                } ?? []
+            valueBeaconsRanged.value = filtered + beacons.map {
+                ModelValueBeacon(regionIdentifier    : region.identifier,
+                                 proximityUUID       : $0.proximityUUID.uuidString,
+                                 proximity           : $0.proximity,
+                                 accuracy            : $0.accuracy,
+                                 major               : CLBeaconMajorValue($0.major),
+                                 minor               : CLBeaconMinorValue($0.minor),
+                                 rssi                : $0.rssi)
+            }
+            self.update.fire()
         }
-        self.update.fire()
     }
     
     func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
@@ -386,3 +411,4 @@ extension BasicModel : CBPeripheralManagerDelegate {
     
     
 }
+

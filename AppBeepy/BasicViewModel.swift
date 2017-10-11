@@ -143,7 +143,7 @@ class BasicViewModel : ViewModel {
             data.sections.append(ViewModelSection(title:"RANGED BEACONS", rows: rows))
         }
 
-        if settings.settingLayoutShowBeacon.value {
+        if false && settings.settingLayoutShowBeacon.value {
             var rows : [ViewModelRow] = []
             
             rows.append(composeRowFromValue("UUID",model.valueBeaconUUID.value))
@@ -168,11 +168,11 @@ class BasicViewModel : ViewModel {
                 return rows
             }
             
-            if settings.settingLayoutShowRegionsMonitored.value, let regions = model.valueRegionsMonitored.value {
-                data.sections.append(ViewModelSection(title:"MONITORED REGIONS", rows: createRegionRows(regions)))
-            }
             if settings.settingLayoutShowRegionsRanged.value, let regions = model.valueRegionsRanged.value {
                 data.sections.append(ViewModelSection(title:"RANGED REGIONS", rows: createRegionRows(regions)))
+            }
+            if settings.settingLayoutShowRegionsMonitored.value, let regions = model.valueRegionsMonitored.value {
+                data.sections.append(ViewModelSection(title:"MONITORED REGIONS", rows: createRegionRows(regions)))
             }
 
         }

@@ -123,7 +123,6 @@ extension ViewOfDashboard : UITableViewDataSource {
         result.separatorInset = .zero
         result.layoutMargins = .zero
         
-        
         if let row = viewModel?.data.sections[safe:indexPath.section]?.rows[safe:indexPath.row] {
         
             let value = UILabel()
